@@ -346,14 +346,20 @@ def _messages_table(messages: list[dict[str, Any]]) -> list[str]:
 def _agent_runs_table(agent_runs: list[dict[str, Any]]) -> list[str]:
     if not agent_runs:
         return ["_No agent runs recorded._"]
-    rows = ["| Agent | Task | Exit code | Duration |", "| --- | --- | --- | --- |"]
+    rows = [
+        "| Agent | Task | Status | Exit code | Duration | Metadata |",
+        "| --- | --- | --- | --- | --- | --- |",
+    ]
     for run in agent_runs:
+        status = "passed" if run.get("passed") else "failed"
         rows.append(
             "| "
             f"{_cell(run.get('agent_name', ''))} | "
             f"{_cell(run.get('task', ''))} | "
+            f"{status} | "
             f"{run.get('exit_code', '')} | "
-            f"{run.get('duration_s', '')}s |"
+            f"{run.get('duration_s', '')}s | "
+            f"{_cell(_metadata_summary(run.get('metadata', {})))} |"
         )
     return rows
 
@@ -392,3 +398,11 @@ def _provenance_lines(provenance: dict[str, Any]) -> list[str]:
 
 def _cell(value: Any) -> str:
     return str(value).replace("|", "\\|").replace("\n", " ").strip()
+
+
+def _metadata_summary(metadata: Any) -> str:
+    if not isinstance(metadata, dict) or not metadata:
+        return ""
+    return ", ".join(
+        f"{key}={metadata[key]}" for key in sorted(metadata)
+    )

@@ -152,3 +152,28 @@ def test_render_markdown_report_accepts_loaded_bundle() -> None:
 
     assert "# loaded report" in report
     assert "- Agents: 0" in report
+
+
+def test_render_markdown_report_shows_agent_run_status_and_metadata() -> None:
+    now = utc_now()
+    run = WorkflowRun(name="failed agent report")
+    run.agent_runs.append(
+        AgentRun(
+            agent_name="solver",
+            task="solve hard case",
+            command=["solver"],
+            exit_code=-1,
+            stdout="",
+            stderr="adapter exploded",
+            duration_s=0.01,
+            started_at=now,
+            finished_at=now,
+            metadata={"error_type": "RuntimeError", "environment": "local-dev"},
+        )
+    )
+
+    report = render_markdown_report(run)
+
+    assert "| solver | solve hard case | failed | -1 | 0.01s |" in report
+    assert "error_type=RuntimeError" in report
+    assert "environment=local-dev" in report

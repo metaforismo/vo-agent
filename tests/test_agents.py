@@ -23,3 +23,48 @@ def test_local_command_agent_passes_task_on_stdin_and_captures_output(tmp_path: 
     assert (tmp_path / "artifact.txt").read_text(encoding="utf-8") == "HELLO AGENT"
     assert evidence.kind == "agent_run"
     assert evidence.data["exit_code"] == 0
+
+
+def test_local_command_agent_records_timeout_as_failed_run(tmp_path: Path):
+    script = tmp_path / "slow_agent.py"
+    script.write_text(
+        "import sys, time\n"
+        "print('started')\n"
+        "sys.stdout.flush()\n"
+        "time.sleep(2)\n",
+        encoding="utf-8",
+    )
+
+    agent = LocalCommandAgent(
+        ["python", str(script)],
+        name="slow-agent",
+        timeout=0.2,
+        metadata={"role": "worker"},
+    )
+    result = agent.run("do the slow thing", VerificationContext(cwd=tmp_path))
+
+    assert result.passed is False
+    assert result.exit_code == 124
+    assert "started" in result.stdout
+    assert "timed out" in result.stderr
+    assert result.metadata["role"] == "worker"
+    assert result.metadata["timed_out"] is True
+    assert result.metadata["timeout_s"] == 0.2
+    assert result.metadata["error_type"] == "TimeoutExpired"
+
+
+def test_local_command_agent_records_missing_command_as_failed_run(tmp_path: Path):
+    agent = LocalCommandAgent(
+        ["missing-vo-agent-command"],
+        name="missing-agent",
+        metadata={"role": "worker"},
+    )
+
+    result = agent.run("run missing command", VerificationContext(cwd=tmp_path))
+
+    assert result.passed is False
+    assert result.exit_code == 127
+    assert result.stdout == ""
+    assert "missing-vo-agent-command" in result.stderr
+    assert result.metadata["role"] == "worker"
+    assert result.metadata["error_type"] == "FileNotFoundError"

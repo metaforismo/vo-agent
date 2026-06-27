@@ -456,6 +456,36 @@ This is intentionally not a model adapter yet. It is the stable execution
 boundary that future Codex, Claude Code, SSH, Docker, and VM-backed adapters
 can implement.
 
+## Failed Agent Runs
+
+Agent failures are recorded as bundle data. If a local command times out,
+cannot be launched, or an adapter raises unexpectedly, `WorkflowRun.run_agent`
+returns a failed `AgentRun`, appends it to the run, and records
+`agent_run_finished`.
+
+```python
+from vo import AgentSpec, LocalCommandAgent, WorkflowRun
+
+run = WorkflowRun(name="failure-demo")
+run.add_agent(AgentSpec(name="runner", goal="Try a command and record failure"))
+
+result = run.run_agent(
+    "runner",
+    LocalCommandAgent(["missing-vo-agent-command"], name="runner"),
+    "Run the unavailable command.",
+)
+
+assert result.passed is False
+assert result.metadata["error_type"] == "FileNotFoundError"
+```
+
+Run the failure-capture example:
+
+```bash
+python3 examples/failed_agent_capture.py
+vo inspect work/failed-agent-capture-bundle.json
+```
+
 ## Artifact Provenance
 
 Register files that matter to the run so bundles contain hashes and metadata:
