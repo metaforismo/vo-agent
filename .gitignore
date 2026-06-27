@@ -17,6 +17,7 @@ dist/
 venv/
 env/
 work/.venv/
+.worktrees/
 
 # Generated runtime artifacts
 work/
