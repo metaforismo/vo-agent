@@ -104,10 +104,10 @@
 - [x] Run `UV_PROJECT_ENVIRONMENT=work/.venv uv build`.
 - [x] Remove generated `dist/`, caches, and bytecode.
 - [x] Update this plan with verification evidence.
-- [ ] Commit the feature branch.
-- [ ] Merge into `main`.
-- [ ] Push `main`.
-- [ ] Verify GitHub CI on `main` succeeds.
+- [x] Commit the feature branch.
+- [x] Merge into `main`.
+- [x] Push `main`.
+- [x] Verify GitHub CI on `main` succeeds.
 
 ## Self-Review
 
@@ -135,3 +135,7 @@
 - Bundle validation: `for bundle in work/*-bundle.json; do UV_PROJECT_ENVIRONMENT=work/.venv uv run vo validate "$bundle"; done` validated all 12 generated bundles.
 - Compile: `UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examples` passed.
 - Build: `UV_PROJECT_ENVIRONMENT=work/.venv uv build` built `dist/vo_agent-0.1.0.tar.gz` and `dist/vo_agent-0.1.0-py3-none-any.whl`.
+- Feature commit: `git commit -m "Capture agent execution failures"` -> `41fc9a8`.
+- Merge commit: `git merge --no-ff feature/agent-run-failure-capture -m "Merge agent failure capture"` -> `a84a611`.
+- Push: `git push` updated `main` on `https://github.com/metaforismo/vo-agent`.
+- GitHub CI: run `28294600109` for `Merge agent failure capture` completed with `success`.
