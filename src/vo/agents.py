@@ -12,6 +12,14 @@ from vo.models import Evidence, jsonable, utc_now
 from vo.verifiers import VerificationContext
 
 
+def _coerce_output_text(value: object) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, bytes):
+        return value.decode(errors="replace")
+    return str(value)
+
+
 @dataclass(slots=True)
 class AgentRun:
     """Captured result of one agent task execution."""
@@ -57,6 +65,38 @@ class AgentRun:
                 else f"agent {self.agent_name} exited {self.exit_code}"
             ),
             data=self.to_dict(),
+        )
+
+    @classmethod
+    def from_exception(
+        cls,
+        *,
+        agent_name: str,
+        task: str,
+        command: Sequence[str],
+        exc: BaseException,
+        started_at: str,
+        started: float,
+        exit_code: int = -1,
+        stdout: str = "",
+        stderr: str | None = None,
+        metadata: dict[str, object] | None = None,
+    ) -> "AgentRun":
+        error_metadata = {
+            **(metadata or {}),
+            "error_type": type(exc).__name__,
+        }
+        return cls(
+            agent_name=agent_name,
+            task=task,
+            command=[str(part) for part in command],
+            exit_code=exit_code,
+            stdout=stdout,
+            stderr=stderr if stderr is not None else str(exc),
+            duration_s=round(time.monotonic() - started, 6),
+            started_at=started_at,
+            finished_at=utc_now(),
+            metadata=error_metadata,
         )
 
 
@@ -106,16 +146,45 @@ class LocalCommandAgent:
         started_at = utc_now()
         started = time.monotonic()
         timeout = self.timeout if self.timeout is not None else context.timeout
-        completed = subprocess.run(
-            self.command,
-            input=task,
-            text=True,
-            capture_output=True,
-            cwd=Path(context.cwd) if context.cwd is not None else None,
-            env=context.merged_env(),
-            timeout=timeout,
-            check=False,
-        )
+        try:
+            completed = subprocess.run(
+                self.command,
+                input=task,
+                text=True,
+                capture_output=True,
+                cwd=Path(context.cwd) if context.cwd is not None else None,
+                env=context.merged_env(),
+                timeout=timeout,
+                check=False,
+            )
+        except subprocess.TimeoutExpired as exc:
+            return AgentRun.from_exception(
+                agent_name=self.name,
+                task=task,
+                command=self.command,
+                exc=exc,
+                started_at=started_at,
+                started=started,
+                exit_code=124,
+                stdout=_coerce_output_text(exc.output),
+                stderr=f"command timed out after {exc.timeout} seconds",
+                metadata={
+                    **self.metadata,
+                    "timed_out": True,
+                    "timeout_s": exc.timeout,
+                },
+            )
+        except OSError as exc:
+            return AgentRun.from_exception(
+                agent_name=self.name,
+                task=task,
+                command=self.command,
+                exc=exc,
+                started_at=started_at,
+                started=started,
+                exit_code=127,
+                metadata=dict(self.metadata),
+            )
         finished_at = utc_now()
         return AgentRun(
             agent_name=self.name,

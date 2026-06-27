@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -669,7 +670,19 @@ class WorkflowRun:
                 "environment": environment_name,
             },
         )
-        result = adapter.run(task, context or VerificationContext())
+        started_at = utc_now()
+        started = time.monotonic()
+        try:
+            result = adapter.run(task, context or VerificationContext())
+        except Exception as exc:
+            result = AgentRun.from_exception(
+                agent_name=agent_name,
+                task=task,
+                command=[adapter.name],
+                exc=exc,
+                started_at=started_at,
+                started=started,
+            )
         if environment_name is not None:
             result.metadata = {
                 **result.metadata,
@@ -681,8 +694,10 @@ class WorkflowRun:
             {
                 "agent_name": agent_name,
                 "passed": result.passed,
+                "failed": not result.passed,
                 "exit_code": result.exit_code,
                 "environment": environment_name,
+                "error_type": result.metadata.get("error_type"),
             },
         )
         return result
