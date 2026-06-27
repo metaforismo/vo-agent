@@ -58,11 +58,11 @@
 - [x] Run import smoke checks.
 - [x] Run `uv build`.
 - [x] Clean generated build/test artifacts.
-- [ ] Commit public-release setup locally.
-- [ ] Create public GitHub repository `metaforismo/vo-agent`.
-- [ ] Push `main` to GitHub and set upstream.
-- [ ] Verify remote repository visibility and URL.
-- [ ] Verify local git status is clean.
+- [x] Commit public-release setup locally.
+- [x] Create public GitHub repository `metaforismo/vo-agent`.
+- [x] Push `main` to GitHub and set upstream.
+- [x] Verify remote repository visibility and URL.
+- [x] Verify local git status is clean.
 - [x] Update this plan with verification evidence.
 
 ## Verification Commands
@@ -95,3 +95,7 @@ git status --short
 - Compile: `UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examples` passed.
 - Smoke: package import plus `pyproject.toml` URL/license checks printed `public release smoke ok`.
 - Build: `UV_PROJECT_ENVIRONMENT=work/.venv uv build` built `dist/vo_agent-0.1.0.tar.gz` and `dist/vo_agent-0.1.0-py3-none-any.whl`.
+- Local release commit: `git commit -m "Prepare public GitHub release"` -> `4c5eac9`.
+- Remote creation: `gh repo create vo-agent --public --source . --remote origin --push --description "Evidence-gated workflows for coordinating coding agents."` -> `https://github.com/metaforismo/vo-agent`.
+- Remote verification: `gh repo view metaforismo/vo-agent --json nameWithOwner,visibility,url --jq '{nameWithOwner,visibility,url}'` -> `{"nameWithOwner":"metaforismo/vo-agent","url":"https://github.com/metaforismo/vo-agent","visibility":"PUBLIC"}`.
+- Workflow verification: `gh workflow list -R metaforismo/vo-agent` showed active `CI` and `Dependabot Updates` workflows.
