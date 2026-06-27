@@ -7,6 +7,7 @@ name = "vo-agent"
 version = "0.1.0"
 description = "Evidence-gated workflows for coordinating coding agents."
 readme = "README.md"
+license = "Apache-2.0"
 requires-python = ">=3.11"
 dependencies = []
 keywords = ["agents", "workflows", "verification", "automation", "research"]
@@ -23,6 +24,11 @@ classifiers = [
 
 [project.scripts]
 vo = "vo.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/metaforismo/vo-agent"
+Repository = "https://github.com/metaforismo/vo-agent"
+Issues = "https://github.com/metaforismo/vo-agent/issues"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]

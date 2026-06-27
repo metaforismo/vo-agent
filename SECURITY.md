@@ -2,8 +2,11 @@
 
 ## Reporting Issues
 
-This repository does not yet have a public security contact. If you publish it,
-add a private reporting address before accepting external use.
+Please report suspected vulnerabilities through GitHub Security Advisories:
+
+https://github.com/metaforismo/vo-agent/security/advisories/new
+
+Use public issues only for non-sensitive bugs.
 
 ## Secret Handling
 

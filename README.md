@@ -510,8 +510,10 @@ The report summarizes agents, environments, execution plans, provisioning
 results, plan execution results, messages, agent runs, claims, artifacts,
 budget, and local runtime provenance.
 
-## Repository Status
+## Repository
 
-This repository is local-first and ready to push to a remote. No open-source
-license has been selected yet; choose one before publishing or accepting
-external contributions.
+Public repository: https://github.com/metaforismo/vo-agent
+
+## License
+
+VO Agent is licensed under Apache-2.0. See [LICENSE](LICENSE).
