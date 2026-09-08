@@ -1,6 +1,6 @@
 import pytest
 
-from vo import ResourceConflict, ResourceManager
+from quaestio import ResourceConflict, ResourceManager
 
 
 def test_resource_manager_blocks_conflicting_active_lease():

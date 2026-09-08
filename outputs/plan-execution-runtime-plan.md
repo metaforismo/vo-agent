@@ -4,7 +4,7 @@
 
 **Goal:** Add durable plan execution results that record how an execution plan ran wave-by-wave and task-by-task.
 
-**Architecture:** The runtime adds a focused `vo.plan_execution` module with serializable `ExecutedTask`, `ExecutedWave`, and `PlanExecutionResult` records. `WorkflowRun.execute_execution_plan()` executes planned tasks through existing agent adapters, requires a ready provisioning result by default, stops after a failed wave, records events, and exports results in bundles and reports. Execution is local and sequential for now, while preserving the same wave contract future distributed executors can implement concurrently.
+**Architecture:** The runtime adds a focused `quaestio.plan_execution` module with serializable `ExecutedTask`, `ExecutedWave`, and `PlanExecutionResult` records. `WorkflowRun.execute_execution_plan()` executes planned tasks through existing agent adapters, requires a ready provisioning result by default, stops after a failed wave, records events, and exports results in bundles and reports. Execution is local and sequential for now, while preserving the same wave contract future distributed executors can implement concurrently.
 
 **Tech Stack:** Python 3.11+ stdlib dataclasses, existing VO agent adapter, execution-plan, provisioning, workflow, pytest, current `uv` test workflow.
 
@@ -12,18 +12,18 @@
 
 ## File Structure
 
-- Create: `src/vo/plan_execution.py`
+- Create: `src/quaestio/plan_execution.py`
   - Defines `ExecutedTask`, `ExecutedWave`, and `PlanExecutionResult`.
   - Owns validation, aggregate status/counts, and JSON-safe serialization.
-- Modify: `src/vo/exceptions.py`
+- Modify: `src/quaestio/exceptions.py`
   - Adds `PlanExecutionError` for invalid plan execution attempts.
-- Modify: `src/vo/workflow.py`
+- Modify: `src/quaestio/workflow.py`
   - Adds `plan_execution_results`, `execute_execution_plan()`, provisioning readiness checks, bundle export, and execution events.
-- Modify: `src/vo/bundles.py`
+- Modify: `src/quaestio/bundles.py`
   - Requires `plan_execution_results` as a top-level bundle list.
-- Modify: `src/vo/report.py`
+- Modify: `src/quaestio/report.py`
   - Adds execution-result summary and table section.
-- Modify: `src/vo/__init__.py`
+- Modify: `src/quaestio/__init__.py`
   - Exports plan execution public API.
 - Modify: `README.md`
   - Documents local plan execution as the reference executor.
@@ -69,7 +69,7 @@
 - [x] Implement `ExecutedTask` validation, status, and serialization.
 - [x] Implement `ExecutedWave` validation, status, and serialization.
 - [x] Implement `PlanExecutionResult` validation, counts, status, and serialization.
-- [x] Export plan-execution APIs from `vo`.
+- [x] Export plan-execution APIs from `quaestio`.
 - [x] Add `plan_execution_results` storage to `WorkflowRun`.
 - [x] Implement ready provisioning lookup in `WorkflowRun`.
 - [x] Implement adapter validation in `WorkflowRun.execute_execution_plan()`.
@@ -112,8 +112,8 @@ UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/environment_assignment.
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/execution_plan.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/provisioning.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/plan_execution.py
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo validate work/plan-execution-bundle.json
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo inspect work/plan-execution-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio validate work/plan-execution-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio inspect work/plan-execution-bundle.json
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examples
 ```
 
@@ -133,7 +133,7 @@ UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examp
 ## Expected Public API Shape
 
 ```python
-from vo import LocalProvisioner, WorkflowRun
+from quaestio import LocalProvisioner, WorkflowRun
 
 run = WorkflowRun(name="execute-demo")
 # add agents, environments, task graph, execution plan, and adapters first

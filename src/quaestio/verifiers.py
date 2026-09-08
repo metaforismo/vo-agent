@@ -10,8 +10,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Protocol
 
-from vo.exceptions import VerificationError
-from vo.models import Claim, Evidence, VerificationResult
+from quaestio.exceptions import VerificationError
+from quaestio.models import Claim, Evidence, VerificationResult
 
 
 @dataclass(slots=True)

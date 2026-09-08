@@ -12,9 +12,9 @@
 
 ## File Structure
 
-- `src/vo/agents.py`: new adapter protocol, `AgentRun` model, and `LocalCommandAgent`.
-- `src/vo/workflow.py`: add `agent_runs` storage and `run_agent()`.
-- `src/vo/__init__.py`: export agent runner API.
+- `src/quaestio/agents.py`: new adapter protocol, `AgentRun` model, and `LocalCommandAgent`.
+- `src/quaestio/workflow.py`: add `agent_runs` storage and `run_agent()`.
+- `src/quaestio/__init__.py`: export agent runner API.
 - `tests/test_agents.py`: local command runner behavior.
 - `tests/test_workflow_agents.py`: workflow integration and bundle export.
 - `README.md`: document the local runner.
@@ -35,7 +35,7 @@ Create `tests/test_agents.py`:
 ```python
 from pathlib import Path
 
-from vo import LocalCommandAgent, VerificationContext
+from quaestio import LocalCommandAgent, VerificationContext
 
 
 def test_local_command_agent_passes_task_on_stdin_and_captures_output(tmp_path: Path):
@@ -68,7 +68,7 @@ Create `tests/test_workflow_agents.py`:
 import json
 from pathlib import Path
 
-from vo import AgentSpec, LocalCommandAgent, VerificationContext, WorkflowRun
+from quaestio import AgentSpec, LocalCommandAgent, VerificationContext, WorkflowRun
 
 
 def test_workflow_run_agent_records_run_and_exports_bundle(tmp_path: Path):
@@ -116,8 +116,8 @@ Expected: import failure for `LocalCommandAgent`.
 ### Task 2: Agent Adapter and Local Command Runner
 
 **Files:**
-- Create: `src/vo/agents.py`
-- Modify: `src/vo/__init__.py`
+- Create: `src/quaestio/agents.py`
+- Modify: `src/quaestio/__init__.py`
 
 - [ ] **Step 1: Implement `AgentRun`**
 
@@ -133,7 +133,7 @@ Run commands with `subprocess.run(command, input=task, text=True, capture_output
 
 - [ ] **Step 4: Export agent runner API**
 
-Export `AgentAdapter`, `AgentRun`, and `LocalCommandAgent` from `src/vo/__init__.py`.
+Export `AgentAdapter`, `AgentRun`, and `LocalCommandAgent` from `src/quaestio/__init__.py`.
 
 - [ ] **Step 5: Run local runner tests**
 
@@ -150,7 +150,7 @@ Expected: pass.
 ### Task 3: Workflow Integration
 
 **Files:**
-- Modify: `src/vo/workflow.py`
+- Modify: `src/quaestio/workflow.py`
 
 - [ ] **Step 1: Store agent runs**
 

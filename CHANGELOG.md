@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.0 — unreleased
+
+- Rename the project to Limes Quaestio, package/import/CLI to `limes-quaestio` /
+  `quaestio`, and the base exception to `QuaestioError`.
+- Add transactional research studies, immutable ancestry and revision history,
+  optimistic concurrency, durable retry receipts and retained evidence bytes.
+- Add JSON research commands, bounded ancestry context, unverified source/run
+  import and a read-only local graph with portable HTML snapshots.
+
+
 ## 0.1.0
 
 - Added workflow run bundles with agents, claims, evidence, resources, artifacts,

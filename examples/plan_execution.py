@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from vo import (
+from quaestio import (
     AgentSpec,
     ComputeResources,
     EnvironmentSpec,

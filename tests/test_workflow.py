@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from vo import AgentSpec, CommandVerifier, VerificationContext, VerifierChain, WorkflowRun
+from quaestio import AgentSpec, CommandVerifier, VerificationContext, VerifierChain, WorkflowRun
 
 
 def test_workflow_run_records_agents_claims_evidence_and_bundle(tmp_path: Path):

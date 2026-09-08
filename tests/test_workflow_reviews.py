@@ -5,14 +5,14 @@ from pathlib import Path
 
 import pytest
 
-from vo import (
+from quaestio import (
     AgentRun,
     AgentSpec,
     ReviewPanel,
     ReviewPolicy,
     WorkflowRun,
 )
-from vo.models import utc_now
+from quaestio.models import utc_now
 
 
 class ReviewAgent:

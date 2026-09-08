@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import json
 
-from vo import WorkflowRun
-from vo.cli import main
+from quaestio import WorkflowRun
+from quaestio.cli import main
 
 
 def test_cli_validate_reports_valid_bundle(tmp_path, capsys) -> None:

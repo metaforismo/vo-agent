@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from vo import collect_provenance
+from quaestio import collect_provenance
 
 
 def test_collect_provenance_records_runtime_and_selected_env(tmp_path: Path, monkeypatch):
@@ -9,12 +9,12 @@ def test_collect_provenance_records_runtime_and_selected_env(tmp_path: Path, mon
 
     provenance = collect_provenance(
         cwd=tmp_path,
-        argv=["vo", "run"],
+        argv=["quaestio", "run"],
         env_keys=["VO_TEST_ENV"],
     )
 
     assert provenance.cwd == str(tmp_path)
-    assert provenance.argv == ["vo", "run"]
+    assert provenance.argv == ["quaestio", "run"]
     assert provenance.env == {"VO_TEST_ENV": "visible"}
     assert "VO_SECRET_ENV" not in provenance.env
     assert provenance.python_version

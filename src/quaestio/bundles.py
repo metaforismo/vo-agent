@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from vo.exceptions import BundleValidationError
+from quaestio.exceptions import BundleValidationError
 
 REQUIRED_BUNDLE_KEYS = {
     "run_id",

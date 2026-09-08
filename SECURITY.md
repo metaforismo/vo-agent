@@ -4,13 +4,13 @@
 
 Please report suspected vulnerabilities through GitHub Security Advisories:
 
-https://github.com/metaforismo/vo-agent/security/advisories/new
+https://github.com/Limes-Labs/limes-quaestio/security/advisories/new
 
 Use public issues only for non-sensitive bugs.
 
 ## Secret Handling
 
-VO Agent bundles are intended to be inspectable and shareable. Do not put secret
+Limes Quaestio bundles are intended to be inspectable and shareable. Do not put secret
 values in workflow state, message metadata, environment metadata, artifacts, or
 reports.
 

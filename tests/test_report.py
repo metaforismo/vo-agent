@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from vo import (
+from quaestio import (
     AgentRun,
     AgentSpec,
     Budget,
@@ -18,8 +18,8 @@ from vo import (
     VerifierChain,
     WorkflowRun,
 )
-from vo.models import Evidence, utc_now
-from vo.report import render_markdown_report
+from quaestio.models import Evidence, utc_now
+from quaestio.report import render_markdown_report
 
 
 class ReportAgent:

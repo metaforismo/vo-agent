@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from vo import ComputeResources, EnvironmentSpec
+from quaestio import ComputeResources, EnvironmentSpec
 
 
 def test_compute_resources_validate_positive_cpu_and_memory() -> None:

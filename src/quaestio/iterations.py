@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from vo.agents import AgentRun
-from vo.models import VerificationResult, jsonable, utc_now
+from quaestio.agents import AgentRun
+from quaestio.models import VerificationResult, jsonable, utc_now
 
 
 @dataclass(slots=True)

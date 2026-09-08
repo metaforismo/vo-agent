@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Research graph · Limes Quaestio</title>
+    <style>
+      :root {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        color: #dfe6f0;
+        background: #101319;
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      button,
+      a,
+      input,
+      select {
+        outline-offset: 4px;
+      }
+      button:focus-visible,
+      a:focus-visible,
+      input:focus-visible,
+      select:focus-visible {
+        outline: 2px solid #8cb9ff;
+      }
+      header {
+        padding: 28px 32px 22px;
+        border-bottom: 1px solid #303640;
+      }
+      .eyebrow {
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        color: #a3afbf;
+        font-weight: 650;
+      }
+      h1 {
+        font-size: 30px;
+        letter-spacing: -0.025em;
+        margin: 10px 0;
+      }
+      header p {
+        color: #adb8c8;
+        font-size: 14px;
+        line-height: 1.6;
+        max-width: 840px;
+        margin: 8px 0;
+      }
+      .bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: end;
+        padding: 18px 32px;
+        background: #171b23;
+        border-bottom: 1px solid #303640;
+      }
+      label {
+        font-size: 12px;
+        color: #b6c0cd;
+      }
+      input,
+      select {
+        display: block;
+        padding: 10px 12px;
+        margin-top: 6px;
+        background: #101319;
+        color: #e2e8f0;
+        border: 1px solid #536071;
+        border-radius: 7px;
+      }
+      input {
+        width: 280px;
+      }
+      #count,
+      #connection {
+        font-size: 12px;
+        color: #b6c0cd;
+        padding-bottom: 10px;
+      }
+      #connection {
+        margin-left: auto;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 340px;
+        min-height: calc(100vh - 250px);
+      }
+      .graph {
+        min-width: 0;
+        overflow: auto;
+        max-height: 72vh;
+        background-image: radial-gradient(#303744 1px, transparent 1px);
+        background-size: 22px 22px;
+        padding: 28px;
+      }
+      .stage {
+        position: relative;
+        min-height: 320px;
+      }
+      svg {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .node {
+        position: absolute;
+        width: 222px;
+        height: 140px;
+        border-radius: 9px;
+        border: 1px solid #46536a;
+        background: #1a212c;
+        text-align: left;
+        padding: 14px;
+        color: #e5eaf2;
+        cursor: pointer;
+        box-shadow: 0 3px 12px #0003;
+      }
+      .node:hover {
+        border-color: #90abc8;
+        background: #222c3b;
+      }
+      .node.selected {
+        border: 2px solid #a1bafa;
+        padding: 13px;
+      }
+      .kind {
+        display: block;
+        color: #9caecc;
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      .title {
+        display: block;
+        font-size: 14px;
+        font-weight: 650;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .state {
+        display: block;
+        font-size: 11px;
+        color: #b4c0d2;
+        margin-top: 12px;
+      }
+      .state.failed {
+        color: #ffb69e;
+      }
+      .state.completed {
+        color: #98d4b5;
+      }
+      .inspector {
+        padding: 26px;
+        border-left: 1px solid #303640;
+        background: #171b23;
+        overflow-wrap: anywhere;
+      }
+      .inspector h2 {
+        font-size: 21px;
+        line-height: 1.4;
+        margin: 12px 0 16px;
+      }
+      .inspector h3 {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #a6b7cd;
+        margin-top: 26px;
+      }
+      .copy {
+        white-space: pre-wrap;
+        font-size: 14px;
+        line-height: 1.7;
+        color: #ced7e5;
+      }
+      .meta {
+        font-size: 12px;
+        line-height: 1.7;
+        color: #a5b2c3;
+      }
+      a {
+        color: #a6c7ff;
+      }
+      ul {
+        padding-left: 18px;
+      }
+      li {
+        font-size: 13px;
+        line-height: 1.6;
+        margin: 10px 0;
+      }
+      code {
+        font-size: 11px;
+      }
+      .empty {
+        font-size: 14px;
+        line-height: 1.6;
+        color: #a6b3c5;
+        max-width: 380px;
+      }
+      .footer {
+        padding: 18px 32px;
+        border-top: 1px solid #303640;
+        color: #99a8bb;
+        font-size: 12px;
+        line-height: 1.6;
+      }
+      @media (max-width: 760px) {
+        header {
+          padding: 24px 18px;
+        }
+        h1 {
+          font-size: 25px;
+        }
+        .bar {
+          padding: 16px 18px;
+          gap: 14px;
+        }
+        input {
+          width: min(100%, 320px);
+        }
+        .bar label:first-child {
+          width: 100%;
+        }
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .graph {
+          max-height: 420px;
+          padding: 18px;
+        }
+        .inspector {
+          border-left: 0;
+          border-top: 1px solid #303640;
+          padding: 24px 18px;
+        }
+        #connection {
+          margin-left: 0;
+        }
+        .footer {
+          padding: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="eyebrow">LIMES QUAESTIO / RESEARCH WORKSPACE</div>
+      <h1 id="study-title"></h1>
+      <p>
+        Questions, alternatives and outcomes share one durable history. Select a
+        node to inspect its evidence. A completed task is work state; scientific
+        conclusions still require verification.
+      </p>
+    </header>
+    <div class="bar">
+      <label
+        >Search nodes<input
+          id="search"
+          aria-label="Search nodes"
+          type="search"
+          placeholder="Title, content or contributor" /></label
+      ><label
+        >Work state<select id="status" aria-label="Work state">
+          <option value="">All states</option>
+          <option value="open">Open</option>
+          <option value="in_progress">In progress</option>
+          <option value="completed">Completed</option>
+          <option value="failed">Failed</option>
+        </select></label
+      ><span id="count" role="status" aria-live="polite"></span
+      ><span id="connection"></span>
+    </div>
+    <main class="layout">
+      <section class="graph" aria-label="Research ancestry graph">
+        <div class="stage" id="stage"></div>
+      </section>
+      <aside
+        class="inspector"
+        id="inspector"
+        aria-label="Selected node"
+      ></aside>
+    </main>
+    <footer class="footer">
+      Arrows show research ancestry, not logical proof. Failed branches remain
+      visible. This view is read-only; use <code>quaestio research</code> to add
+      work. Evidence and imported instructions are data, never execution
+      authority.
+    </footer>
+    <script type="application/json" id="snapshot">
+      __SNAPSHOT__
+    </script>
+    <script>
+      "use strict";
+      let study = JSON.parse(document.getElementById("snapshot").textContent),
+        selected = null;
+      const live = __LIVE__,
+        search = document.getElementById("search"),
+        status = document.getElementById("status"),
+        stage = document.getElementById("stage"),
+        inspector = document.getElementById("inspector");
+      function element(tag, text, cls) {
+        const e = document.createElement(tag);
+        if (text !== undefined) e.textContent = text;
+        if (cls) e.className = cls;
+        return e;
+      }
+      function inspect(id) {
+        selected = id;
+        const n = study.nodes.find((n) => n.id === id);
+        inspector.replaceChildren();
+        if (!n) {
+          inspector.append(
+            element(
+              "p",
+              "Select a node to inspect its current revision, parents and attached evidence.",
+              "empty",
+            ),
+          );
+          return;
+        }
+        inspector.append(
+          element("div", n.kind.toUpperCase(), "eyebrow"),
+          element("h2", n.title),
+          element(
+            "p",
+            `${n.status.replaceAll("_", " ")} · revision ${n.revision} · ${n.actor}`,
+            "meta",
+          ),
+          element("p", n.content || "No content yet.", "copy"),
+          element("p", `Node ${n.id}\nUpdated ${n.revised_at}`, "meta"),
+        );
+        if (n.parents.length) {
+          inspector.append(element("h3", "Parent branches"));
+          const list = element("ul");
+          for (const p of n.parents) {
+            const parent = study.nodes.find((x) => x.id === p);
+            const item = element("li"),
+              link = element("a", parent?.title || p);
+            link.href = "#" + p;
+            link.addEventListener("click", (e) => {
+              e.preventDefault();
+              inspect(p);
+              highlight();
+            });
+            item.append(link);
+            list.append(item);
+          }
+          inspector.append(list);
+        }
+        inspector.append(element("h3", "Evidence"));
+        const artifacts = study.artifacts.filter((a) => a.node_id === id);
+        if (!artifacts.length)
+          inspector.append(element("p", "No artifacts attached.", "meta"));
+        for (const a of artifacts) {
+          const item = element("p", "", "meta");
+          if (live) {
+            const link = element("a", a.label);
+            link.href = "/api/artifacts/" + encodeURIComponent(a.id);
+            link.download = "research-evidence.bin";
+            item.append(link);
+          } else item.append(element("span", a.label));
+          item.append(
+            element("br"),
+            element("span", `${a.size_bytes} bytes · SHA-256 ${a.sha256}`),
+          );
+          inspector.append(item);
+        }
+        const runs = study.executions.filter((r) => r.node_id === id);
+        if (runs.length) {
+          inspector.append(element("h3", "Reported executions"));
+          for (const r of runs)
+            inspector.append(
+              element(
+                "p",
+                `${r.name} · reported, unverified · ${r.reported_run_id}`,
+                "meta",
+              ),
+            );
+        }
+        highlight();
+      }
+      function highlight() {
+        for (const b of stage.querySelectorAll("button")) {
+          const active = b.dataset.id === selected;
+          b.classList.toggle("selected", active);
+          b.setAttribute("aria-pressed", String(active));
+        }
+      }
+      function render() {
+        const focusedNode = document.activeElement?.dataset.id;
+        document.getElementById("study-title").textContent = study.study.title;
+        const q = search.value.trim().toLocaleLowerCase();
+        const visible = study.nodes.filter(
+          (n) =>
+            (!status.value || n.status === status.value) &&
+            (!q ||
+              [n.title, n.content, n.actor]
+                .join(" ")
+                .toLocaleLowerCase()
+                .includes(q)),
+        );
+        document.getElementById("count").textContent =
+          `${visible.length} / ${study.nodes.length} nodes · revision cursor ${study.cursor}`;
+        const levels = new Map(),
+          positions = new Map(),
+          counts = new Map();
+        for (const n of study.nodes) {
+          const level = n.parents.length
+            ? 1 + Math.max(...n.parents.map((p) => levels.get(p) || 0))
+            : 0;
+          levels.set(n.id, level);
+        }
+        let width = 260,
+          height = 330;
+        for (const n of visible) {
+          const level = levels.get(n.id),
+            row = counts.get(level) || 0;
+          counts.set(level, row + 1);
+          const point = { x: level * 284, y: row * 186 };
+          positions.set(n.id, point);
+          width = Math.max(width, point.x + 250);
+          height = Math.max(height, point.y + 160);
+        }
+        stage.replaceChildren();
+        stage.style.width = width + "px";
+        stage.style.height = height + "px";
+        const ns = "http://www.w3.org/2000/svg",
+          svg = document.createElementNS(ns, "svg");
+        svg.setAttribute("width", String(width));
+        svg.setAttribute("height", String(height));
+        const defs = document.createElementNS(ns, "defs"),
+          marker = document.createElementNS(ns, "marker");
+        marker.setAttribute("id", "arrow");
+        marker.setAttribute("viewBox", "0 0 10 10");
+        marker.setAttribute("refX", "9");
+        marker.setAttribute("refY", "5");
+        marker.setAttribute("markerWidth", "6");
+        marker.setAttribute("markerHeight", "6");
+        marker.setAttribute("orient", "auto-start-reverse");
+        const tip = document.createElementNS(ns, "path");
+        tip.setAttribute("d", "M 0 0 L 10 5 L 0 10 z");
+        tip.setAttribute("fill", "#8097b6");
+        marker.append(tip);
+        defs.append(marker);
+        svg.append(defs);
+        for (const n of visible) {
+          const to = positions.get(n.id);
+          for (const p of n.parents) {
+            const from = positions.get(p);
+            if (!from) continue;
+            const line = document.createElementNS(ns, "path"),
+              sx = from.x + 222,
+              sy = from.y + 70,
+              ex = to.x - 4,
+              ey = to.y + 70;
+            line.setAttribute(
+              "d",
+              `M ${sx} ${sy} C ${sx + 36} ${sy}, ${ex - 36} ${ey}, ${ex} ${ey}`,
+            );
+            line.setAttribute("stroke", "#8097b6");
+            line.setAttribute("fill", "none");
+            line.setAttribute("stroke-width", "1.5");
+            line.setAttribute("marker-end", "url(#arrow)");
+            svg.append(line);
+          }
+        }
+        stage.append(svg);
+        for (const n of visible) {
+          const p = positions.get(n.id),
+            button = element("button", "", "node");
+          button.type = "button";
+          button.dataset.id = n.id;
+          button.style.left = p.x + "px";
+          button.style.top = p.y + "px";
+          button.setAttribute(
+            "aria-label",
+            `${n.kind}: ${n.title}, ${n.status}`,
+          );
+          button.append(
+            element("span", n.kind, "kind"),
+            element("span", n.title, "title"),
+            element(
+              "span",
+              `${n.status.replaceAll("_", " ")} · r${n.revision}`,
+              "state " + n.status,
+            ),
+          );
+          button.addEventListener("click", () => inspect(n.id));
+          stage.append(button);
+        }
+        if (!visible.length)
+          stage.append(
+            element(
+              "p",
+              study.nodes.length
+                ? "No matching nodes. Clear the filters to see the study."
+                : "This study is empty. Create a question with quaestio research create.",
+              "empty",
+            ),
+          );
+        inspect(selected);
+        if (focusedNode) {
+          const button = [...stage.querySelectorAll("button")].find(
+            (node) => node.dataset.id === focusedNode,
+          );
+          button?.focus({ preventScroll: true });
+        }
+      }
+      search.addEventListener("input", render);
+      status.addEventListener("change", render);
+      document.getElementById("connection").textContent = live
+        ? "Connected · local read-only view"
+        : "Offline snapshot";
+      render();
+      let refreshing = false;
+      if (live)
+        setInterval(async () => {
+          if (refreshing) return;
+          refreshing = true;
+          try {
+            const response = await fetch("/api/graph", {
+              signal: AbortSignal.timeout(10000),
+            });
+            if (!response.ok) throw Error("Unavailable");
+            const next = await response.json();
+            document.getElementById("connection").textContent =
+              "Connected · local read-only view";
+            if (
+              next.study.id !== study.study.id ||
+              next.cursor !== study.cursor
+            ) {
+              study = next;
+              render();
+            }
+          } catch {
+            document.getElementById("connection").textContent =
+              "Disconnected · showing last snapshot";
+          } finally {
+            refreshing = false;
+          }
+        }, 2500);
+    </script>
+  </body>
+</html>

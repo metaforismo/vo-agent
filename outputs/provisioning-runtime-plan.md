@@ -4,7 +4,7 @@
 
 **Goal:** Add provisioning records that capture which execution environments were prepared for an execution plan, by which provisioner, and with what status.
 
-**Architecture:** The runtime adds a focused `vo.provisioning` module with immutable-ish records and a small provisioner protocol. `LocalProvisioner` is a no-op readiness provider for local development and tests; future Docker, SSH, and VM providers can implement the same protocol. `WorkflowRun` stores provisioning results, records events, exports them in bundles, and renders them in markdown reports.
+**Architecture:** The runtime adds a focused `quaestio.provisioning` module with immutable-ish records and a small provisioner protocol. `LocalProvisioner` is a no-op readiness provider for local development and tests; future Docker, SSH, and VM providers can implement the same protocol. `WorkflowRun` stores provisioning results, records events, exports them in bundles, and renders them in markdown reports.
 
 **Tech Stack:** Python 3.11+ stdlib dataclasses and Protocols, existing VO environment and execution-plan models, pytest, current `uv` test workflow.
 
@@ -12,18 +12,18 @@
 
 ## File Structure
 
-- Create: `src/vo/provisioning.py`
+- Create: `src/quaestio/provisioning.py`
   - Defines `ProvisionedEnvironment`, `ProvisioningResult`, `Provisioner`, and `LocalProvisioner`.
   - Owns environment readiness records, status validation, provider metadata, and JSON-safe serialization.
-- Modify: `src/vo/exceptions.py`
+- Modify: `src/quaestio/exceptions.py`
   - Adds `ProvisioningError` for invalid provisioning attempts.
-- Modify: `src/vo/workflow.py`
+- Modify: `src/quaestio/workflow.py`
   - Adds `provisioning_results`, `provision_execution_plan()`, bundle export, and `provisioning_finished` events.
-- Modify: `src/vo/bundles.py`
+- Modify: `src/quaestio/bundles.py`
   - Requires `provisioning_results` as a top-level bundle list.
-- Modify: `src/vo/report.py`
+- Modify: `src/quaestio/report.py`
   - Adds provisioning result summary and table section.
-- Modify: `src/vo/__init__.py`
+- Modify: `src/quaestio/__init__.py`
   - Exports provisioning public API.
 - Modify: `README.md`
   - Documents local provisioning records as the provider handoff.
@@ -71,7 +71,7 @@
 - [x] Validate execution-plan environments against declared environment specs.
 - [x] Serialize resource requests into provisioned environment records.
 - [x] Preserve non-secret provider metadata.
-- [x] Export provisioning APIs from `vo`.
+- [x] Export provisioning APIs from `quaestio`.
 - [x] Add `provisioning_results` storage to `WorkflowRun`.
 - [x] Implement `WorkflowRun.provision_execution_plan()`.
 - [x] Record `provisioning_finished` events.
@@ -106,8 +106,8 @@ UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/task_graph_workflow.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/environment_assignment.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/execution_plan.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/provisioning.py
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo validate work/provisioning-bundle.json
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo inspect work/provisioning-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio validate work/provisioning-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio inspect work/provisioning-bundle.json
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examples
 ```
 
@@ -127,7 +127,7 @@ UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examp
 ## Expected Public API Shape
 
 ```python
-from vo import LocalProvisioner, WorkflowRun
+from quaestio import LocalProvisioner, WorkflowRun
 
 run = WorkflowRun(name="provisioning-demo")
 # add agents, environments, task graph, and execution plan first

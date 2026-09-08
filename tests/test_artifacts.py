@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from vo import ArtifactStore
+from quaestio import ArtifactStore
 
 
 def test_artifact_store_registers_file_with_hash_size_and_metadata(tmp_path: Path):

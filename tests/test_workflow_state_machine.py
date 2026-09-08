@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from vo import StateMachine, StateMachineError, WorkflowRun
+from quaestio import StateMachine, StateMachineError, WorkflowRun
 
 
 def test_workflow_registers_and_dispatches_state_machine() -> None:

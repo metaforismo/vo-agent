@@ -5,9 +5,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Literal
 
-from vo.agents import AgentRun
-from vo.exceptions import ReviewParseError
-from vo.models import Evidence, jsonable, utc_now
+from quaestio.agents import AgentRun
+from quaestio.exceptions import ReviewParseError
+from quaestio.models import Evidence, jsonable, utc_now
 
 ReviewDecision = Literal["approve", "reject", "revise", "invalid", "failed"]
 

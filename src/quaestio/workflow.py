@@ -8,15 +8,15 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from vo.agents import AgentAdapter, AgentRun
-from vo.artifacts import ArtifactStore
-from vo.budget import Budget, BudgetEntry
-from vo.environments import EnvironmentSpec
-from vo.exceptions import PlanExecutionError, StateMachineError
-from vo.execution_plan import ExecutionPlan, build_execution_plan
-from vo.iterations import IterationAttempt, IterationLoop
-from vo.messages import Message, MessageLog
-from vo.models import (
+from quaestio.agents import AgentAdapter, AgentRun
+from quaestio.artifacts import ArtifactStore
+from quaestio.budget import Budget, BudgetEntry
+from quaestio.environments import EnvironmentSpec
+from quaestio.exceptions import PlanExecutionError, StateMachineError
+from quaestio.execution_plan import ExecutionPlan, build_execution_plan
+from quaestio.iterations import IterationAttempt, IterationLoop
+from quaestio.messages import Message, MessageLog
+from quaestio.models import (
     AgentSpec,
     Claim,
     VerificationResult,
@@ -24,14 +24,14 @@ from vo.models import (
     short_id,
     utc_now,
 )
-from vo.plan_execution import ExecutedTask, ExecutedWave, PlanExecutionResult
-from vo.provenance import RunProvenance, collect_provenance
-from vo.provisioning import Provisioner, ProvisioningResult
-from vo.resources import ResourceManager
-from vo.reviews import ReviewPanel, ReviewResult, parse_review_decision
-from vo.state_machine import DispatchRecord, StateMachine
-from vo.task_graph import TaskGraph
-from vo.verifiers import VerificationContext, VerifierChain
+from quaestio.plan_execution import ExecutedTask, ExecutedWave, PlanExecutionResult
+from quaestio.provenance import RunProvenance, collect_provenance
+from quaestio.provisioning import Provisioner, ProvisioningResult
+from quaestio.resources import ResourceManager
+from quaestio.reviews import ReviewPanel, ReviewResult, parse_review_decision
+from quaestio.state_machine import DispatchRecord, StateMachine
+from quaestio.task_graph import TaskGraph
+from quaestio.verifiers import VerificationContext, VerifierChain
 
 
 @dataclass(slots=True)
@@ -745,7 +745,7 @@ class WorkflowRun:
         return path
 
     def write_report(self, path: str | Path) -> Path:
-        from vo.report import write_markdown_report
+        from quaestio.report import write_markdown_report
 
         return write_markdown_report(self, path)
 

@@ -5,10 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Iterable, Protocol
 
-from vo.environments import EnvironmentSpec
-from vo.exceptions import ProvisioningError
-from vo.execution_plan import ExecutionPlan
-from vo.models import jsonable, utc_now
+from quaestio.environments import EnvironmentSpec
+from quaestio.exceptions import ProvisioningError
+from quaestio.execution_plan import ExecutionPlan
+from quaestio.models import jsonable, utc_now
 
 PROVISIONING_STATUSES = {"ready", "failed"}
 

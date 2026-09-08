@@ -5,8 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
-from vo.exceptions import ResourceConflict
-from vo.models import short_id, utc_now
+from quaestio.exceptions import ResourceConflict
+from quaestio.models import short_id, utc_now
 
 if TYPE_CHECKING:
     from collections.abc import MutableMapping

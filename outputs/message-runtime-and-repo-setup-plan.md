@@ -4,7 +4,7 @@
 
 **Goal:** Add durable workflow messages and turn the workspace into a clean local git repository ready to push.
 
-**Architecture:** The runtime adds a focused `vo.messages` module with immutable-ish message records and a small log helper. `WorkflowRun` records messages, emits message events, exports messages in bundles, and renders them in reports. Repository setup adds standard Python project hygiene files, keeps generated runtime artifacts out of git, and creates an initial local commit after verification.
+**Architecture:** The runtime adds a focused `quaestio.messages` module with immutable-ish message records and a small log helper. `WorkflowRun` records messages, emits message events, exports messages in bundles, and renders them in reports. Repository setup adds standard Python project hygiene files, keeps generated runtime artifacts out of git, and creates an initial local commit after verification.
 
 **Tech Stack:** Python 3.11+ stdlib dataclasses, existing VO workflow/report/bundle models, pytest, uv, git.
 
@@ -12,16 +12,16 @@
 
 ## File Structure
 
-- Create: `src/vo/messages.py`
+- Create: `src/quaestio/messages.py`
   - Defines `Message` and `MessageLog`.
   - Owns validation, inbox/thread filtering, JSON-safe serialization, and stable timestamps/ids.
-- Modify: `src/vo/workflow.py`
+- Modify: `src/quaestio/workflow.py`
   - Adds `messages`, `send_message()`, `messages_for()`, bundle export, and `message_sent` events.
-- Modify: `src/vo/bundles.py`
+- Modify: `src/quaestio/bundles.py`
   - Requires `messages` as a top-level bundle list.
-- Modify: `src/vo/report.py`
+- Modify: `src/quaestio/report.py`
   - Adds message summary and message table section.
-- Modify: `src/vo/__init__.py`
+- Modify: `src/quaestio/__init__.py`
   - Exports message public API.
 - Modify: `README.md`
   - Documents messages and repository status/license note.
@@ -72,7 +72,7 @@
 - [x] Run focused tests and confirm failures are for missing message support.
 - [x] Implement `Message`.
 - [x] Implement `MessageLog`.
-- [x] Export message APIs from `vo`.
+- [x] Export message APIs from `quaestio`.
 - [x] Add message storage to `WorkflowRun`.
 - [x] Implement `WorkflowRun.send_message()`.
 - [x] Implement `WorkflowRun.messages_for()`.
@@ -121,8 +121,8 @@ UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/execution_plan.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/provisioning.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/plan_execution.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/messaging.py
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo validate work/messaging-bundle.json
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo inspect work/messaging-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio validate work/messaging-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio inspect work/messaging-bundle.json
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examples
 git status --short
 ```
@@ -144,7 +144,7 @@ git status --short
 ## Expected Public API Shape
 
 ```python
-from vo import AgentSpec, WorkflowRun
+from quaestio import AgentSpec, WorkflowRun
 
 run = WorkflowRun(name="message-demo")
 run.add_agent(AgentSpec(name="solver", goal="Solve the problem"))

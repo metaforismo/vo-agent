@@ -1,37 +1,61 @@
-# VO Agent
+# Limes Quaestio
 
-VO Agent is a Python library for evidence-gated agent workflows.
+Limes Quaestio keeps questions, competing experiments, evidence and decisions in
+one durable research graph. Python agents and researchers share the same SQLite
+study through a JSON CLI. A local browser view makes its ancestry inspectable.
 
-The long-term goal is a language and runtime for coordinating coding agents
-across machines: agents propose work, execute it in isolated environments, and
-can only advance by producing verifiable evidence.
+It also provides the existing evidence-gated workflow runtime: `WorkflowRun`
+records local executions, `TaskGraph` orders tasks and `VerifierChain` checks
+claims. A study records those run bundles as **reported, unverified** executions;
+importing a result never makes it scientific truth or authorizes a command.
 
-This first slice is intentionally local-first. It gives us the clean core
-objects before cloud provisioning, hosted dashboards, live LLM adapters, or VM
-backends:
+## Start a study
 
-- `AgentSpec`: declares who is working and what goal they own
-- `EnvironmentSpec`: declares where agents should run
-- `ResourceManager`: prevents silent conflicts on shared resources
-- `Claim`: records what an agent says is true
-- `Evidence`: records what was actually checked
-- `VerifierChain`: gates claims through command or Python checks
-- `Budget`: records bounded spend for long-running agent loops
-- `StateMachine`: declares deterministic workflow control flow
-- `IterationLoop`: repeats agent execution until verification passes
-- `ReviewPanel`: coordinates reviewer agents around a claim
-- `TaskGraph`: declares dependency and resource shape for agent work
-- `ExecutionPlan`: turns task graphs into placement-aware execution waves
-- `LocalProvisioner`: records local readiness for planned environments
-- `MessageLog`: records durable user and agent messages
-- `WorkflowRun`: exports a reproducible JSON bundle for inspection
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e '.[dev]'
+python examples/research_study.py --out work/summation
+quaestio research --db work/summation/study.sqlite serve
+```
+
+Open the printed local URL. The example actually compares sequential addition and `math.fsum`
+against exact arithmetic for one cancellation case, retains the failed branch
+and its output, reproduces the second branch and records a limited decision.
+Choose a new output directory to repeat it; existing studies are never replaced.
+
+```bash
+quaestio research --db study.sqlite init --title 'Retrieval study'
+quaestio research --db study.sqlite create --kind question \
+  --title 'Does reranking improve this fixed query set?' \
+  --actor researcher --operation-id initial-question
+```
+
+Use returned node IDs with `branch`, `merge`, `revise`, `attach`, `record-run`,
+`show`, `context` and `export-html`. Run `quaestio research --help` for discovery,
+and read the [research guide](docs/research-guide.md) for reproducible commands,
+retry semantics and limits. [Architecture](docs/research-graph-design.md) explains
+transaction ownership and the boundary with [Limes Tabularium](https://github.com/Limes-Labs/limes-tabularium).
+
+## Scope
+
+This is a local research workspace with a read-only browser view. It has no
+hosted collaboration, authenticated actors, MCP server, autonomous research
+scheduler or scientific claim verifier. Existing local command adapters execute
+commands only when explicitly called by the operator. Imported Markdown and
+run bundles are data. The separate Tabularium kernel owns governed memory.
+
+Previously named `vo-agent`: the distribution is now `limes-quaestio`, Python
+imports use `quaestio`, the CLI is `quaestio`, and the base exception is
+`QuaestioError`. Update old imports and commands. Existing workflow JSON bundle
+keys are unchanged. Version 0.2.0 here does not imply a PyPI release.
 
 ## Example
 
 ```python
 from pathlib import Path
 
-from vo import (
+from quaestio import (
     AgentSpec,
     Budget,
     CommandVerifier,
@@ -71,17 +95,9 @@ python3 examples/optimize_with_evidence.py
 Validate or inspect the generated bundle:
 
 ```bash
-vo validate work/example-run-bundle.json
-vo inspect work/example-run-bundle.json
+quaestio validate work/example-run-bundle.json
+quaestio inspect work/example-run-bundle.json
 ```
-
-## Current Scope
-
-VO Agent does not yet launch live coding agents or provision VMs. The first
-library boundary is the reproducible protocol around the agents: explicit
-environments, explicit resources, explicit state machines, explicit claims,
-explicit evidence, and exported run state. Cloud execution and LLM adapters can
-be layered on top without changing this core contract.
 
 ## Execution Environments
 
@@ -91,7 +107,7 @@ request with resource requirements, setup commands, non-secret environment
 variables, and secret names:
 
 ```python
-from vo import AgentSpec, ComputeResources, EnvironmentSpec, WorkflowRun
+from quaestio import AgentSpec, ComputeResources, EnvironmentSpec, WorkflowRun
 
 run = WorkflowRun(name="placement-demo")
 run.add_agent(AgentSpec(name="solver", goal="Solve the hard case"))
@@ -116,7 +132,7 @@ Run the environment example:
 
 ```bash
 python3 examples/environment_assignment.py
-vo inspect work/environment-assignment-bundle.json
+quaestio inspect work/environment-assignment-bundle.json
 ```
 
 ## Execution Plans
@@ -125,7 +141,7 @@ Execution plans are the handoff between workflow language and provisioning.
 They turn a task graph plus agent placements into deterministic waves:
 
 ```python
-from vo import AgentSpec, ComputeResources, EnvironmentSpec, TaskGraph, TaskSpec, WorkflowRun
+from quaestio import AgentSpec, ComputeResources, EnvironmentSpec, TaskGraph, TaskSpec, WorkflowRun
 
 run = WorkflowRun(name="planning-demo")
 run.add_agent(AgentSpec(name="searcher", goal="Find candidates"))
@@ -162,7 +178,7 @@ Run the execution-plan example:
 
 ```bash
 python3 examples/execution_plan.py
-vo inspect work/execution-plan-bundle.json
+quaestio inspect work/execution-plan-bundle.json
 ```
 
 ## Provisioning Records
@@ -173,7 +189,7 @@ no-op: it validates that the plan references declared environments and records
 them as ready.
 
 ```python
-from vo import LocalProvisioner
+from quaestio import LocalProvisioner
 
 plan = run.plan_task_graph(graph)
 result = run.provision_execution_plan(
@@ -191,7 +207,7 @@ Run the provisioning example:
 
 ```bash
 python3 examples/provisioning.py
-vo inspect work/provisioning-bundle.json
+quaestio inspect work/provisioning-bundle.json
 ```
 
 ## Plan Execution
@@ -200,7 +216,7 @@ The reference executor runs a provisioned execution plan locally through agent
 adapters and records wave-by-wave results:
 
 ```python
-from vo import LocalCommandAgent, VerificationContext
+from quaestio import LocalCommandAgent, VerificationContext
 
 result = run.execute_execution_plan(
     plan,
@@ -221,7 +237,7 @@ Run the plan-execution example:
 
 ```bash
 python3 examples/plan_execution.py
-vo inspect work/plan-execution-bundle.json
+quaestio inspect work/plan-execution-bundle.json
 ```
 
 ## Messages
@@ -230,7 +246,7 @@ Messages record the conversations that steer a run. They are serialized into
 the bundle alongside events, agent runs, claims, and artifacts:
 
 ```python
-from vo import AgentSpec, WorkflowRun
+from quaestio import AgentSpec, WorkflowRun
 
 run = WorkflowRun(name="message-demo")
 run.add_agent(AgentSpec(name="solver", goal="Solve the problem"))
@@ -256,7 +272,7 @@ Run the messaging example:
 
 ```bash
 python3 examples/messaging.py
-vo inspect work/messaging-bundle.json
+quaestio inspect work/messaging-bundle.json
 ```
 
 ## State Machines
@@ -264,7 +280,7 @@ vo inspect work/messaging-bundle.json
 State machines describe the control flow of an agent process:
 
 ```python
-from vo import StateMachine, WorkflowRun
+from quaestio import StateMachine, WorkflowRun
 
 run = WorkflowRun(name="verification-loop")
 machine = StateMachine(
@@ -300,7 +316,7 @@ Run the state-machine example:
 
 ```bash
 python3 examples/state_machine_workflow.py
-vo inspect work/state-machine-bundle.json
+quaestio inspect work/state-machine-bundle.json
 ```
 
 ## Verification-Driven Iteration
@@ -309,7 +325,7 @@ Iteration loops force an agent to keep trying until a verifier passes or an
 explicit attempt limit is reached:
 
 ```python
-from vo import (
+from quaestio import (
     CommandVerifier,
     IterationLoop,
     IterationPolicy,
@@ -343,7 +359,7 @@ Run the iteration example:
 
 ```bash
 python3 examples/iteration_loop.py
-vo inspect work/iteration-loop-bundle.json
+quaestio inspect work/iteration-loop-bundle.json
 ```
 
 ## Multi-Agent Review Panels
@@ -359,7 +375,7 @@ comment: proof handles the stated invariant
 Valid decisions are `approve`, `reject`, and `revise`.
 
 ```python
-from vo import LocalCommandAgent, ReviewPanel, ReviewPolicy, WorkflowRun
+from quaestio import LocalCommandAgent, ReviewPanel, ReviewPolicy, WorkflowRun
 
 run = WorkflowRun(name="review-demo")
 claim = run.claim("candidate proof is ready")
@@ -387,7 +403,7 @@ Run the review-panel example:
 
 ```bash
 python3 examples/review_panel.py
-vo inspect work/review-panel-bundle.json
+quaestio inspect work/review-panel-bundle.json
 ```
 
 ## Dependency Graphs
@@ -397,7 +413,7 @@ parallel waves. Each task names its agent, task text, dependencies, and optional
 resources:
 
 ```python
-from vo import TaskGraph, TaskSpec, WorkflowRun
+from quaestio import TaskGraph, TaskSpec, WorkflowRun
 
 graph = TaskGraph(name="research-plan")
 graph.add_task(TaskSpec(name="search", agent_name="solver", task="Find candidates."))
@@ -424,7 +440,7 @@ Run the task-graph example:
 
 ```bash
 python3 examples/task_graph_workflow.py
-vo inspect work/task-graph-bundle.json
+quaestio inspect work/task-graph-bundle.json
 ```
 
 ## Local Agent Runner
@@ -436,7 +452,7 @@ result in the workflow bundle.
 ```python
 from pathlib import Path
 
-from vo import AgentSpec, LocalCommandAgent, VerificationContext, WorkflowRun
+from quaestio import AgentSpec, LocalCommandAgent, VerificationContext, WorkflowRun
 
 run = WorkflowRun(name="local-agent-demo")
 run.add_agent(AgentSpec(name="writer", goal="Summarize a patch"))
@@ -464,14 +480,14 @@ returns a failed `AgentRun`, appends it to the run, and records
 `agent_run_finished`.
 
 ```python
-from vo import AgentSpec, LocalCommandAgent, WorkflowRun
+from quaestio import AgentSpec, LocalCommandAgent, WorkflowRun
 
 run = WorkflowRun(name="failure-demo")
 run.add_agent(AgentSpec(name="runner", goal="Try a command and record failure"))
 
 result = run.run_agent(
     "runner",
-    LocalCommandAgent(["missing-vo-agent-command"], name="runner"),
+    LocalCommandAgent(["missing-limes-quaestio-command"], name="runner"),
     "Run the unavailable command.",
 )
 
@@ -483,7 +499,7 @@ Run the failure-capture example:
 
 ```bash
 python3 examples/failed_agent_capture.py
-vo inspect work/failed-agent-capture-bundle.json
+quaestio inspect work/failed-agent-capture-bundle.json
 ```
 
 ## Artifact Provenance
@@ -510,12 +526,12 @@ and best-effort git state. Environment capture is explicit to avoid leaking
 secrets:
 
 ```python
-from vo import WorkflowRun, collect_provenance
+from quaestio import WorkflowRun, collect_provenance
 
 run = WorkflowRun(
     name="audited-run",
     provenance=collect_provenance(
-        argv=["vo", "run"],
+        argv=["quaestio", "run"],
         env_keys=["VO_EXAMPLE_RUN"],
     ),
 )
@@ -530,7 +546,7 @@ Bundles are durable JSON records. Reports are generated from those bundles for
 humans:
 
 ```python
-from vo import load_bundle, render_markdown_report
+from quaestio import load_bundle, render_markdown_report
 
 bundle = load_bundle("work/example-run-bundle.json")
 print(render_markdown_report(bundle))
@@ -542,8 +558,8 @@ budget, and local runtime provenance.
 
 ## Repository
 
-Public repository: https://github.com/metaforismo/vo-agent
+Public repository: https://github.com/Limes-Labs/limes-quaestio
 
 ## License
 
-VO Agent is licensed under Apache-2.0. See [LICENSE](LICENSE).
+Limes Quaestio is licensed under Apache-2.0. See [LICENSE](LICENSE).

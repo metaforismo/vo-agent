@@ -4,7 +4,7 @@ from collections.abc import Sequence
 
 import pytest
 
-from vo import (
+from quaestio import (
     AgentRun,
     AgentSpec,
     Budget,
@@ -14,8 +14,8 @@ from vo import (
     VerifierChain,
     WorkflowRun,
 )
-from vo.models import utc_now
-from vo.verifiers import VerificationContext
+from quaestio.models import utc_now
+from quaestio.verifiers import VerificationContext
 
 
 class ScriptedAgent:

@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from vo import WorkflowRun, collect_provenance
+from quaestio import WorkflowRun, collect_provenance
 
 
 def test_workflow_bundle_includes_provenance(tmp_path: Path):

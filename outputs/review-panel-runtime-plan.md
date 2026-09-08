@@ -4,7 +4,7 @@
 
 **Goal:** Add multi-agent review panels where reviewer agents approve, reject, or request revision on workflow claims.
 
-**Architecture:** The runtime adds a focused `vo.reviews` module for review policies, decision parsing, panel state, and serializable review results. `WorkflowRun.run_review_panel()` composes existing registered agents and claims, records reviewer agent runs, attaches review evidence to the claim, resolves quorum policy, and exports panels in bundles and reports.
+**Architecture:** The runtime adds a focused `quaestio.reviews` module for review policies, decision parsing, panel state, and serializable review results. `WorkflowRun.run_review_panel()` composes existing registered agents and claims, records reviewer agent runs, attaches review evidence to the claim, resolves quorum policy, and exports panels in bundles and reports.
 
 **Tech Stack:** Python 3.11+ stdlib dataclasses, existing VO agent/workflow/evidence models, pytest, current `uv` test workflow.
 
@@ -12,19 +12,19 @@
 
 ## File Structure
 
-- Create: `src/vo/reviews.py`
+- Create: `src/quaestio/reviews.py`
   - Defines `ReviewPolicy`, `ReviewResult`, `ReviewPanel`, and `parse_review_decision()`.
   - Owns decision validation, quorum resolution, result serialization, and panel status.
-- Modify: `src/vo/workflow.py`
+- Modify: `src/quaestio/workflow.py`
   - Adds `review_panels`, `add_review_panel()`, and `run_review_panel()`.
   - Records review lifecycle events, appends reviewer agent runs, and attaches review evidence to claims.
-- Modify: `src/vo/bundles.py`
+- Modify: `src/quaestio/bundles.py`
   - Requires `review_panels` as a top-level bundle list.
-- Modify: `src/vo/report.py`
+- Modify: `src/quaestio/report.py`
   - Adds review panel count and markdown table.
-- Modify: `src/vo/__init__.py`
+- Modify: `src/quaestio/__init__.py`
   - Exports review public API.
-- Modify: `src/vo/exceptions.py`
+- Modify: `src/quaestio/exceptions.py`
   - Adds `ReviewParseError`.
 - Modify: `README.md`
   - Documents multi-agent review panels.
@@ -85,7 +85,7 @@
 - [x] Leave claims pending when review parsing or reviewer execution fails.
 - [x] Include `review_panels` in workflow bundles.
 - [x] Update bundle validator required keys.
-- [x] Export review APIs from `vo`.
+- [x] Export review APIs from `quaestio`.
 - [x] Render review panels in markdown reports.
 - [x] Add a runnable review-panel example.
 - [x] Update README with review-panel usage.
@@ -110,8 +110,8 @@ UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/local_agent_runner.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/state_machine_workflow.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/iteration_loop.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/review_panel.py
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo validate work/review-panel-bundle.json
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo inspect work/review-panel-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio validate work/review-panel-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio inspect work/review-panel-bundle.json
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examples
 ```
 
@@ -135,7 +135,7 @@ UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examp
 ## Expected Public API Shape
 
 ```python
-from vo import ReviewPanel, ReviewPolicy, WorkflowRun
+from quaestio import ReviewPanel, ReviewPolicy, WorkflowRun
 
 panel = ReviewPanel(
     name="proof-review",

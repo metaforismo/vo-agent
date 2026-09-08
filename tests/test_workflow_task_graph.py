@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from vo import AgentRun, AgentSpec, TaskGraph, TaskSpec, WorkflowRun
-from vo.models import utc_now
+from quaestio import AgentRun, AgentSpec, TaskGraph, TaskSpec, WorkflowRun
+from quaestio.models import utc_now
 
 
 class ScriptedAdapter:

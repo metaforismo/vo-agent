@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from vo import BundleValidationError, WorkflowRun, load_bundle, validate_bundle_dict
+from quaestio import BundleValidationError, WorkflowRun, load_bundle, validate_bundle_dict
 
 
 def test_validate_bundle_accepts_workflow_bundle() -> None:

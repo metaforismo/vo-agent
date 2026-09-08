@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from vo import Budget, BudgetExceeded, WorkflowRun
+from quaestio import Budget, BudgetExceeded, WorkflowRun
 
 
 def test_budget_tracks_spends_and_remaining_balance() -> None:

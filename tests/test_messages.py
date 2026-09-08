@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from vo import Message, MessageLog
+from quaestio import Message, MessageLog
 
 
 def test_message_validates_sender_and_content() -> None:

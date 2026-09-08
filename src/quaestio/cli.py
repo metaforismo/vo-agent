@@ -1,4 +1,4 @@
-"""Command-line tools for VO Agent bundles."""
+"""Command-line tools for Limes Quaestio bundles."""
 
 from __future__ import annotations
 
@@ -6,14 +6,18 @@ import argparse
 import sys
 from collections.abc import Sequence
 
-from vo.bundles import load_bundle
-from vo.exceptions import BundleValidationError
-from vo.report import render_markdown_report
+from quaestio.bundles import load_bundle
+from quaestio.exceptions import BundleValidationError
+from quaestio.report import render_markdown_report
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
+
+    if args.command == "research":
+        from quaestio.research_cli import run
+        return run(args)
 
     try:
         bundle = load_bundle(args.bundle)
@@ -34,8 +38,8 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="vo",
-        description="Validate and inspect VO Agent workflow bundles.",
+        prog="quaestio",
+        description="Durable research graphs and evidence-gated workflow bundles.",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -44,6 +48,9 @@ def _build_parser() -> argparse.ArgumentParser:
 
     inspect = subparsers.add_parser("inspect", help="print a markdown bundle report")
     inspect.add_argument("bundle", help="path to a workflow bundle JSON file")
+
+    from quaestio.research_cli import configure
+    configure(subparsers.add_parser("research", help="work with a durable research graph"))
 
     return parser
 

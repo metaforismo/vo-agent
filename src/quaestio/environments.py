@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
-from vo.models import jsonable
+from quaestio.models import jsonable
 
 EnvironmentKind = Literal["local", "container", "vm"]
 VALID_ENVIRONMENT_KINDS = {"local", "container", "vm"}

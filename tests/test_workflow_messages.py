@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from vo import AgentSpec, WorkflowRun
+from quaestio import AgentSpec, WorkflowRun
 
 
 def test_workflow_send_message_records_message() -> None:

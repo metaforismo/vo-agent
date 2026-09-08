@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from vo import Claim, CommandVerifier, VerificationContext, VerifierChain
+from quaestio import Claim, CommandVerifier, VerificationContext, VerifierChain
 
 
 def test_verifier_chain_accepts_claim_when_all_checks_pass(tmp_path: Path):

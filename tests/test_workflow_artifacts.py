@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from vo import WorkflowRun
+from quaestio import WorkflowRun
 
 
 def test_workflow_bundle_includes_registered_artifacts(tmp_path: Path):
