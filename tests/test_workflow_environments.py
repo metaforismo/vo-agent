@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from vo import (
+from quaestio import (
     AgentRun,
     AgentSpec,
     ComputeResources,
@@ -13,7 +13,7 @@ from vo import (
     VerificationContext,
     WorkflowRun,
 )
-from vo.models import utc_now
+from quaestio.models import utc_now
 
 
 class EchoAgent:

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from vo import StateMachine, StateMachineError
+from quaestio import StateMachine, StateMachineError
 
 
 def test_state_machine_dispatches_declared_transition() -> None:

@@ -4,7 +4,7 @@
 
 **Goal:** Add explicit task dependency graphs so agent work can be scheduled in deterministic, resource-safe parallel waves.
 
-**Architecture:** The runtime adds a focused `vo.task_graph` module for task specs, dependency validation, cycle detection, ready-task calculation, and resource-safe batching. `WorkflowRun.run_task_graph()` composes registered agents, local adapters, task status updates, events, bundles, and reports while preserving the dependency graph for future cloud scheduling.
+**Architecture:** The runtime adds a focused `quaestio.task_graph` module for task specs, dependency validation, cycle detection, ready-task calculation, and resource-safe batching. `WorkflowRun.run_task_graph()` composes registered agents, local adapters, task status updates, events, bundles, and reports while preserving the dependency graph for future cloud scheduling.
 
 **Tech Stack:** Python 3.11+ stdlib dataclasses, existing VO agent/workflow/resource models, pytest, current `uv` test workflow.
 
@@ -12,19 +12,19 @@
 
 ## File Structure
 
-- Create: `src/vo/task_graph.py`
+- Create: `src/quaestio/task_graph.py`
   - Defines `TaskSpec`, `TaskGraph`, and `TaskGraphError`.
   - Owns validation, cycle detection, status transitions, ready tasks, resource-safe batches, and serialization.
-- Modify: `src/vo/workflow.py`
+- Modify: `src/quaestio/workflow.py`
   - Adds `task_graphs`, `add_task_graph()`, and `run_task_graph()`.
   - Records graph lifecycle events and appends task agent runs.
-- Modify: `src/vo/bundles.py`
+- Modify: `src/quaestio/bundles.py`
   - Requires `task_graphs` as a top-level bundle list.
-- Modify: `src/vo/report.py`
+- Modify: `src/quaestio/report.py`
   - Adds task graph count and markdown table.
-- Modify: `src/vo/__init__.py`
+- Modify: `src/quaestio/__init__.py`
   - Exports task graph public API.
-- Modify: `src/vo/exceptions.py`
+- Modify: `src/quaestio/exceptions.py`
   - Adds `TaskGraphError`.
 - Modify: `README.md`
   - Documents dependency graphs and resource-safe batches.
@@ -82,7 +82,7 @@
 - [x] Record `task_graph_finished` events.
 - [x] Include `task_graphs` in workflow bundles.
 - [x] Update bundle validator required keys.
-- [x] Export task graph APIs from `vo`.
+- [x] Export task graph APIs from `quaestio`.
 - [x] Render task graphs in markdown reports.
 - [x] Add a runnable task-graph example.
 - [x] Update README with task-graph usage.
@@ -108,8 +108,8 @@ UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/state_machine_workflow.
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/iteration_loop.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/review_panel.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/task_graph_workflow.py
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo validate work/task-graph-bundle.json
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo inspect work/task-graph-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio validate work/task-graph-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio inspect work/task-graph-bundle.json
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examples
 ```
 
@@ -136,7 +136,7 @@ UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examp
 ## Expected Public API Shape
 
 ```python
-from vo import TaskGraph, TaskSpec, WorkflowRun
+from quaestio import TaskGraph, TaskSpec, WorkflowRun
 
 graph = TaskGraph(name="research-plan")
 graph.add_task(TaskSpec(name="search", agent_name="solver", task="Find candidates."))

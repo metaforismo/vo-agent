@@ -12,17 +12,17 @@
 
 ## File Structure
 
-- Modify: `src/vo/agents.py`
+- Modify: `src/quaestio/agents.py`
   - Add a small text-normalization helper for subprocess exception output.
   - Add `AgentRun.from_exception(...)` for deterministic failed run records.
   - Teach `LocalCommandAgent.run(...)` to capture `TimeoutExpired` and `OSError`.
-- Modify: `src/vo/workflow.py`
+- Modify: `src/quaestio/workflow.py`
   - Wrap adapter execution in `WorkflowRun.run_agent(...)`.
   - Preserve environment metadata on both successful and failed runs.
   - Record `agent_run_finished` for adapter exceptions.
-- Modify: `src/vo/report.py`
+- Modify: `src/quaestio/report.py`
   - Extend the Agent Runs table with pass/fail status and metadata summary.
-- Modify: `src/vo/__init__.py`
+- Modify: `src/quaestio/__init__.py`
   - Export any new public model if needed.
 - Test: `tests/test_agents.py`
   - Cover subprocess timeouts and command launch failures.
@@ -46,8 +46,8 @@
 
 ### Task 2: Local Agent Failure Capture
 
-- [x] Add `_coerce_output_text(value: object) -> str` to `src/vo/agents.py`.
-- [x] Add `AgentRun.from_exception(...)` to `src/vo/agents.py`.
+- [x] Add `_coerce_output_text(value: object) -> str` to `src/quaestio/agents.py`.
+- [x] Add `AgentRun.from_exception(...)` to `src/quaestio/agents.py`.
 - [x] Catch `subprocess.TimeoutExpired` inside `LocalCommandAgent.run(...)`.
 - [x] Return exit code `124` for timeouts with metadata `{"timed_out": True, "timeout_s": timeout, "error_type": "TimeoutExpired"}`.
 - [x] Catch `OSError` inside `LocalCommandAgent.run(...)`.
@@ -93,13 +93,13 @@
 - [x] Add README section `## Failed Agent Runs`.
 - [x] Include the new example command in the README.
 - [x] Run `UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/failed_agent_capture.py`.
-- [x] Validate `work/failed-agent-capture-bundle.json` with `vo validate`.
+- [x] Validate `work/failed-agent-capture-bundle.json` with `quaestio validate`.
 
 ### Task 7: Full Verification
 
 - [x] Run `UV_PROJECT_ENVIRONMENT=work/.venv uv run --with pytest pytest -q`.
 - [x] Run every example with `for example in examples/*.py; do UV_PROJECT_ENVIRONMENT=work/.venv uv run python "$example"; done`.
-- [x] Validate every generated bundle with `for bundle in work/*-bundle.json; do UV_PROJECT_ENVIRONMENT=work/.venv uv run vo validate "$bundle"; done`.
+- [x] Validate every generated bundle with `for bundle in work/*-bundle.json; do UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio validate "$bundle"; done`.
 - [x] Run `UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examples`.
 - [x] Run `UV_PROJECT_ENVIRONMENT=work/.venv uv build`.
 - [x] Remove generated `dist/`, caches, and bytecode.
@@ -129,13 +129,13 @@
 - Report green phase: `UV_PROJECT_ENVIRONMENT=work/.venv uv run --with pytest pytest tests/test_report.py -q` -> `4 passed in 0.60s`.
 - Bundle, CLI, and workflow smoke: `UV_PROJECT_ENVIRONMENT=work/.venv uv run --with pytest pytest tests/test_bundles.py tests/test_cli.py tests/test_workflow.py -q` -> `17 passed in 2.09s`.
 - Failure example: `UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/failed_agent_capture.py` printed `False`, `FileNotFoundError`, and generated bundle/report paths.
-- Failure bundle validation: `UV_PROJECT_ENVIRONMENT=work/.venv uv run vo validate work/failed-agent-capture-bundle.json` -> `valid: failed-agent-capture-demo`.
+- Failure bundle validation: `UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio validate work/failed-agent-capture-bundle.json` -> `valid: failed-agent-capture-demo`.
 - Full tests: `UV_PROJECT_ENVIRONMENT=work/.venv uv run --with pytest pytest -q` -> `148 passed in 6.53s`.
 - Examples: `for example in examples/*.py; do UV_PROJECT_ENVIRONMENT=work/.venv uv run python "$example"; done` ran all 12 examples.
-- Bundle validation: `for bundle in work/*-bundle.json; do UV_PROJECT_ENVIRONMENT=work/.venv uv run vo validate "$bundle"; done` validated all 12 generated bundles.
+- Bundle validation: `for bundle in work/*-bundle.json; do UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio validate "$bundle"; done` validated all 12 generated bundles.
 - Compile: `UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examples` passed.
 - Build: `UV_PROJECT_ENVIRONMENT=work/.venv uv build` built `dist/vo_agent-0.1.0.tar.gz` and `dist/vo_agent-0.1.0-py3-none-any.whl`.
 - Feature commit: `git commit -m "Capture agent execution failures"` -> `41fc9a8`.
 - Merge commit: `git merge --no-ff feature/agent-run-failure-capture -m "Merge agent failure capture"` -> `a84a611`.
-- Push: `git push` updated `main` on `https://github.com/metaforismo/vo-agent`.
+- Push: `git push` updated `main` on `https://github.com/Limes-Labs/limes-quaestio`.
 - GitHub CI: run `28294600109` for `Merge agent failure capture` completed with `success`.

@@ -4,7 +4,7 @@
 
 **Goal:** Add explicit execution environment specs and agent placements as the declarative boundary for future VM provisioning.
 
-**Architecture:** The runtime adds a focused `vo.environments` module for compute resources and environment specs. `WorkflowRun` registers environment specs, assigns agents to environments, includes placement metadata on local agent runs, and exports all placement state in bundles and reports without leaking secret values.
+**Architecture:** The runtime adds a focused `quaestio.environments` module for compute resources and environment specs. `WorkflowRun` registers environment specs, assigns agents to environments, includes placement metadata on local agent runs, and exports all placement state in bundles and reports without leaking secret values.
 
 **Tech Stack:** Python 3.11+ stdlib dataclasses, existing VO workflow and agent models, pytest, current `uv` test workflow.
 
@@ -12,17 +12,17 @@
 
 ## File Structure
 
-- Create: `src/vo/environments.py`
+- Create: `src/quaestio/environments.py`
   - Defines `ComputeResources` and `EnvironmentSpec`.
   - Owns validation, JSON-safe serialization, and secret-name-only handling.
-- Modify: `src/vo/workflow.py`
+- Modify: `src/quaestio/workflow.py`
   - Adds `environments`, `agent_environments`, `add_environment()`, and `assign_agent_environment()`.
   - Adds assigned environment metadata to `AgentRun` records.
-- Modify: `src/vo/bundles.py`
+- Modify: `src/quaestio/bundles.py`
   - Requires `environments` and `agent_environments` as top-level bundle sections.
-- Modify: `src/vo/report.py`
+- Modify: `src/quaestio/report.py`
   - Adds environment and placement summary/table sections.
-- Modify: `src/vo/__init__.py`
+- Modify: `src/quaestio/__init__.py`
   - Exports environment public API.
 - Modify: `README.md`
   - Documents environment specs and local placement metadata.
@@ -76,7 +76,7 @@
 - [x] Include `environments` in workflow bundles.
 - [x] Include `agent_environments` in workflow bundles.
 - [x] Update bundle validator required keys.
-- [x] Export environment APIs from `vo`.
+- [x] Export environment APIs from `quaestio`.
 - [x] Render environments in markdown reports.
 - [x] Render agent placements in markdown reports.
 - [x] Add a runnable environment assignment example.
@@ -104,8 +104,8 @@ UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/iteration_loop.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/review_panel.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/task_graph_workflow.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/environment_assignment.py
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo validate work/environment-assignment-bundle.json
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo inspect work/environment-assignment-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio validate work/environment-assignment-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio inspect work/environment-assignment-bundle.json
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examples
 ```
 
@@ -125,7 +125,7 @@ UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examp
 ## Expected Public API Shape
 
 ```python
-from vo import ComputeResources, EnvironmentSpec, WorkflowRun
+from quaestio import ComputeResources, EnvironmentSpec, WorkflowRun
 
 env = EnvironmentSpec(
     name="gpu-worker",

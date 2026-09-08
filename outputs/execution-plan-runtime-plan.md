@@ -4,7 +4,7 @@
 
 **Goal:** Add deterministic execution plans that turn task graphs and environment placements into serializable waves for future VM/container provisioning.
 
-**Architecture:** The runtime adds a focused `vo.execution_plan` module that builds read-only plans from `TaskGraph`, `EnvironmentSpec`, and `agent_environments`. `WorkflowRun` stores generated plans, records planning events, exports plans in bundles, and renders them in reports. The planner does not execute work; it makes parallelism, resource conflicts, dependencies, and placement failures explicit before any agent runs.
+**Architecture:** The runtime adds a focused `quaestio.execution_plan` module that builds read-only plans from `TaskGraph`, `EnvironmentSpec`, and `agent_environments`. `WorkflowRun` stores generated plans, records planning events, exports plans in bundles, and renders them in reports. The planner does not execute work; it makes parallelism, resource conflicts, dependencies, and placement failures explicit before any agent runs.
 
 **Tech Stack:** Python 3.11+ stdlib dataclasses, existing VO task graph and environment models, pytest, current `uv` test workflow.
 
@@ -12,18 +12,18 @@
 
 ## File Structure
 
-- Create: `src/vo/execution_plan.py`
+- Create: `src/quaestio/execution_plan.py`
   - Defines `PlannedTask`, `ExecutionWave`, `ExecutionPlan`, and `build_execution_plan()`.
   - Owns deterministic topological wave planning, resource-conflict splitting, placement validation, and JSON-safe serialization.
-- Modify: `src/vo/exceptions.py`
+- Modify: `src/quaestio/exceptions.py`
   - Adds `ExecutionPlanError` for invalid plan construction.
-- Modify: `src/vo/workflow.py`
+- Modify: `src/quaestio/workflow.py`
   - Adds `execution_plans`, `plan_task_graph()`, bundle export, and `execution_plan_created` events.
-- Modify: `src/vo/bundles.py`
+- Modify: `src/quaestio/bundles.py`
   - Requires `execution_plans` as a top-level bundle list.
-- Modify: `src/vo/report.py`
+- Modify: `src/quaestio/report.py`
   - Adds execution plan summary and plan table section.
-- Modify: `src/vo/__init__.py`
+- Modify: `src/quaestio/__init__.py`
   - Exports execution-plan public API.
 - Modify: `README.md`
   - Documents execution planning as the provisioning handoff.
@@ -69,7 +69,7 @@
 - [x] Implement placement lookup from agent to environment.
 - [x] Implement unknown placement validation.
 - [x] Implement `build_execution_plan()`.
-- [x] Export execution-plan APIs from `vo`.
+- [x] Export execution-plan APIs from `quaestio`.
 - [x] Add `execution_plans` storage to `WorkflowRun`.
 - [x] Implement `WorkflowRun.plan_task_graph()`.
 - [x] Record `execution_plan_created` events.
@@ -103,8 +103,8 @@ UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/review_panel.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/task_graph_workflow.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/environment_assignment.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/execution_plan.py
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo validate work/execution-plan-bundle.json
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo inspect work/execution-plan-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio validate work/execution-plan-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio inspect work/execution-plan-bundle.json
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examples
 ```
 
@@ -124,7 +124,7 @@ UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examp
 ## Expected Public API Shape
 
 ```python
-from vo import (
+from quaestio import (
     AgentSpec,
     ComputeResources,
     EnvironmentSpec,

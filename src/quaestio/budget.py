@@ -5,8 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from vo.exceptions import BudgetExceeded
-from vo.models import jsonable, utc_now
+from quaestio.exceptions import BudgetExceeded
+from quaestio.models import jsonable, utc_now
 
 
 @dataclass(slots=True)

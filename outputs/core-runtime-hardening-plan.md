@@ -75,8 +75,8 @@ UV_PROJECT_ENVIRONMENT=work/.venv uv run --with pytest pytest tests/test_budget.
 UV_PROJECT_ENVIRONMENT=work/.venv uv run --with pytest pytest -q
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/optimize_with_evidence.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/local_agent_runner.py
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo validate work/example-run-bundle.json
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo inspect work/example-run-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio validate work/example-run-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio inspect work/example-run-bundle.json
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examples
 ```
 

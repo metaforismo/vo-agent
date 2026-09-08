@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from vo import AgentSpec, LocalCommandAgent, VerificationContext, WorkflowRun
+from quaestio import AgentSpec, LocalCommandAgent, VerificationContext, WorkflowRun
 
 
 def main() -> None:
@@ -13,7 +13,7 @@ def main() -> None:
 
     result = run.run_agent(
         "runner",
-        LocalCommandAgent(["missing-vo-agent-command"], name="runner"),
+        LocalCommandAgent(["missing-limes-quaestio-command"], name="runner"),
         "Run the unavailable command.",
         VerificationContext(cwd=work),
     )

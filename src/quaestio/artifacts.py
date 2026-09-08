@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from vo.models import jsonable, utc_now
+from quaestio.models import jsonable, utc_now
 
 
 @dataclass(slots=True)

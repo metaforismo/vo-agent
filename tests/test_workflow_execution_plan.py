@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from vo import (
+from quaestio import (
     AgentSpec,
     ComputeResources,
     EnvironmentSpec,

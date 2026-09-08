@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from vo import (
+from quaestio import (
     ComputeResources,
     EnvironmentSpec,
     ExecutionPlan,

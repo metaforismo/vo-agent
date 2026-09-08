@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Sequence
 
-from vo.models import jsonable, utc_now
+from quaestio.models import jsonable, utc_now
 
 
 @dataclass(slots=True)

@@ -1,7 +1,7 @@
 # Contributing
 
-VO Agent is currently a local-first Python library for reproducible agent
-workflow records.
+Limes Quaestio is currently a local-first Python library for reproducible agent
+workflow records and durable research graphs.
 
 ## Setup
 
@@ -35,14 +35,21 @@ Run examples when bundle or report shape changes:
 
 ```bash
 for example in examples/*.py; do
+  if [ "$example" = "examples/research_study.py" ]; then continue; fi
   UV_PROJECT_ENVIRONMENT=work/.venv uv run python "$example"
 done
+```
+
+Run the research example into a new directory:
+
+```bash
+uv run python examples/research_study.py --out work/research-example
 ```
 
 Validate generated bundles:
 
 ```bash
 for bundle in work/*-bundle.json; do
-  UV_PROJECT_ENVIRONMENT=work/.venv uv run vo validate "$bundle"
+  UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio validate "$bundle"
 done
 ```

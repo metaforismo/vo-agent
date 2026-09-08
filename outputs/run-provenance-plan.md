@@ -12,9 +12,9 @@
 
 ## File Structure
 
-- `src/vo/provenance.py`: provenance models and collector.
-- `src/vo/workflow.py`: add `provenance` to `WorkflowRun` and exported bundles.
-- `src/vo/__init__.py`: export provenance API.
+- `src/quaestio/provenance.py`: provenance models and collector.
+- `src/quaestio/workflow.py`: add `provenance` to `WorkflowRun` and exported bundles.
+- `src/quaestio/__init__.py`: export provenance API.
 - `tests/test_provenance.py`: collector behavior.
 - `tests/test_workflow_provenance.py`: workflow bundle behavior.
 - `README.md`: document provenance and explicit env capture.
@@ -35,7 +35,7 @@ Create `tests/test_provenance.py`:
 ```python
 from pathlib import Path
 
-from vo import collect_provenance
+from quaestio import collect_provenance
 
 
 def test_collect_provenance_records_runtime_and_selected_env(tmp_path: Path, monkeypatch):
@@ -44,12 +44,12 @@ def test_collect_provenance_records_runtime_and_selected_env(tmp_path: Path, mon
 
     provenance = collect_provenance(
         cwd=tmp_path,
-        argv=["vo", "run"],
+        argv=["quaestio", "run"],
         env_keys=["VO_TEST_ENV"],
     )
 
     assert provenance.cwd == str(tmp_path)
-    assert provenance.argv == ["vo", "run"]
+    assert provenance.argv == ["quaestio", "run"]
     assert provenance.env == {"VO_TEST_ENV": "visible"}
     assert "VO_SECRET_ENV" not in provenance.env
     assert provenance.python_version
@@ -65,7 +65,7 @@ Create `tests/test_workflow_provenance.py`:
 import json
 from pathlib import Path
 
-from vo import WorkflowRun, collect_provenance
+from quaestio import WorkflowRun, collect_provenance
 
 
 def test_workflow_bundle_includes_provenance(tmp_path: Path):
@@ -95,8 +95,8 @@ Expected: import failure for `collect_provenance`.
 ### Task 2: Provenance Models and Collector
 
 **Files:**
-- Create: `src/vo/provenance.py`
-- Modify: `src/vo/__init__.py`
+- Create: `src/quaestio/provenance.py`
+- Modify: `src/quaestio/__init__.py`
 
 - [ ] **Step 1: Implement models**
 
@@ -128,7 +128,7 @@ Use `git -C <cwd> rev-parse --show-toplevel`, `rev-parse HEAD`, `branch --show-c
 
 - [ ] **Step 4: Export provenance API**
 
-Export `GitInfo`, `RunProvenance`, and `collect_provenance` from `src/vo/__init__.py`.
+Export `GitInfo`, `RunProvenance`, and `collect_provenance` from `src/quaestio/__init__.py`.
 
 - [ ] **Step 5: Run provenance tests**
 
@@ -145,7 +145,7 @@ Expected: pass.
 ### Task 3: Workflow Integration
 
 **Files:**
-- Modify: `src/vo/workflow.py`
+- Modify: `src/quaestio/workflow.py`
 
 - [ ] **Step 1: Add provenance field**
 

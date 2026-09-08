@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from vo import AgentSpec, LocalCommandAgent, ReviewPanel, ReviewPolicy, WorkflowRun
+from quaestio import AgentSpec, LocalCommandAgent, ReviewPanel, ReviewPolicy, WorkflowRun
 
 
 def main() -> None:

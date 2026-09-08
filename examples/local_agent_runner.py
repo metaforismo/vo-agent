@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from vo import (
+from quaestio import (
     AgentSpec,
     Budget,
     LocalCommandAgent,

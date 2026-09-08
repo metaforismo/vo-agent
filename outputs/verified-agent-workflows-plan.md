@@ -14,12 +14,12 @@
 
 - `pyproject.toml`: package metadata, pytest configuration, editable install support.
 - `README.md`: product position, first API example, and current scope.
-- `src/vo/__init__.py`: public API exports.
-- `src/vo/exceptions.py`: domain exceptions for resource conflicts and verification failures.
-- `src/vo/models.py`: dataclasses for agent specs, claims, evidence records, events, and JSON conversion.
-- `src/vo/resources.py`: explicit resource lease manager so agents cannot silently collide on shared state.
-- `src/vo/verifiers.py`: verifier protocol, command verifier, callable verifier, and verifier chain.
-- `src/vo/workflow.py`: `WorkflowRun`, the high-level object that ties agents, resources, claims, evidence, events, and bundle export together.
+- `src/quaestio/__init__.py`: public API exports.
+- `src/quaestio/exceptions.py`: domain exceptions for resource conflicts and verification failures.
+- `src/quaestio/models.py`: dataclasses for agent specs, claims, evidence records, events, and JSON conversion.
+- `src/quaestio/resources.py`: explicit resource lease manager so agents cannot silently collide on shared state.
+- `src/quaestio/verifiers.py`: verifier protocol, command verifier, callable verifier, and verifier chain.
+- `src/quaestio/workflow.py`: `WorkflowRun`, the high-level object that ties agents, resources, claims, evidence, events, and bundle export together.
 - `tests/test_resources.py`: resource lease behavior.
 - `tests/test_verifiers.py`: evidence-gated verifier chain behavior.
 - `tests/test_workflow.py`: end-to-end workflow bundle behavior.
@@ -45,7 +45,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "vo-agent"
+name = "limes-quaestio"
 version = "0.1.0"
 description = "Evidence-gated workflows for coordinating coding agents."
 readme = "README.md"
@@ -67,7 +67,7 @@ Create `tests/test_resources.py`:
 ```python
 import pytest
 
-from vo import ResourceConflict, ResourceManager
+from quaestio import ResourceConflict, ResourceManager
 
 
 def test_resource_manager_blocks_conflicting_active_lease():
@@ -91,7 +91,7 @@ Create `tests/test_verifiers.py`:
 ```python
 from pathlib import Path
 
-from vo import Claim, CommandVerifier, VerificationContext, VerifierChain
+from quaestio import Claim, CommandVerifier, VerificationContext, VerifierChain
 
 
 def test_verifier_chain_accepts_claim_when_all_checks_pass(tmp_path: Path):
@@ -137,7 +137,7 @@ Create `tests/test_workflow.py`:
 import json
 from pathlib import Path
 
-from vo import AgentSpec, CommandVerifier, VerificationContext, VerifierChain, WorkflowRun
+from quaestio import AgentSpec, CommandVerifier, VerificationContext, VerifierChain, WorkflowRun
 
 
 def test_workflow_run_records_agents_claims_evidence_and_bundle(tmp_path: Path):
@@ -169,25 +169,25 @@ Run:
 python3 -m pytest -q
 ```
 
-Expected: collection fails with `ModuleNotFoundError: No module named 'vo'`.
+Expected: collection fails with `ModuleNotFoundError: No module named 'quaestio'`.
 
 ---
 
 ### Task 2: Core Models and Resource Leases
 
 **Files:**
-- Create: `src/vo/__init__.py`
-- Create: `src/vo/exceptions.py`
-- Create: `src/vo/models.py`
-- Create: `src/vo/resources.py`
+- Create: `src/quaestio/__init__.py`
+- Create: `src/quaestio/exceptions.py`
+- Create: `src/quaestio/models.py`
+- Create: `src/quaestio/resources.py`
 
 - [ ] **Step 1: Implement domain exceptions**
 
-Create `src/vo/exceptions.py` with `VoError`, `ResourceConflict`, and `VerificationError`.
+Create `src/quaestio/exceptions.py` with `VoError`, `ResourceConflict`, and `VerificationError`.
 
 - [ ] **Step 2: Implement serializable models**
 
-Create `src/vo/models.py` with:
+Create `src/quaestio/models.py` with:
 
 - `AgentSpec(name, goal, model=None, tools=(), metadata={})`
 - `Evidence(name, passed, summary, kind="generic", data={}, created_at=...)`
@@ -199,11 +199,11 @@ Every model exposes `to_dict()` returning JSON-safe primitives.
 
 - [ ] **Step 3: Implement resource leasing**
 
-Create `src/vo/resources.py` with `ResourceLease` and `ResourceManager`. `ResourceManager.acquire(name, owner)` raises `ResourceConflict` when another active owner already holds the resource. Releasing a lease removes it only if the same lease is still active.
+Create `src/quaestio/resources.py` with `ResourceLease` and `ResourceManager`. `ResourceManager.acquire(name, owner)` raises `ResourceConflict` when another active owner already holds the resource. Releasing a lease removes it only if the same lease is still active.
 
 - [ ] **Step 4: Export public API**
 
-Create `src/vo/__init__.py` exporting the exceptions, models, and resource manager.
+Create `src/quaestio/__init__.py` exporting the exceptions, models, and resource manager.
 
 - [ ] **Step 5: Run resource tests**
 
@@ -220,12 +220,12 @@ Expected: pass.
 ### Task 3: Verifier Chains
 
 **Files:**
-- Create: `src/vo/verifiers.py`
-- Modify: `src/vo/__init__.py`
+- Create: `src/quaestio/verifiers.py`
+- Modify: `src/quaestio/__init__.py`
 
 - [ ] **Step 1: Implement verification context**
 
-Create `VerificationContext(cwd=None, env={}, timeout=None)` in `src/vo/verifiers.py`.
+Create `VerificationContext(cwd=None, env={}, timeout=None)` in `src/quaestio/verifiers.py`.
 
 - [ ] **Step 2: Implement command verifier**
 
@@ -254,8 +254,8 @@ Expected: pass.
 ### Task 4: Workflow Run and Bundle Export
 
 **Files:**
-- Create: `src/vo/workflow.py`
-- Modify: `src/vo/__init__.py`
+- Create: `src/quaestio/workflow.py`
+- Modify: `src/quaestio/__init__.py`
 
 - [ ] **Step 1: Implement `WorkflowRun`**
 
@@ -296,7 +296,7 @@ Document the product thesis, current local-first scope, and a short API example 
 
 - [ ] **Step 2: Write runnable example**
 
-Create `examples/optimize_with_evidence.py` that imports `vo`, verifies a toy command chain, writes `work/example-run-bundle.json`, and prints the output path.
+Create `examples/optimize_with_evidence.py` that imports `quaestio`, verifies a toy command chain, writes `work/example-run-bundle.json`, and prints the output path.
 
 - [ ] **Step 3: Run full verification**
 

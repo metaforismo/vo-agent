@@ -5,10 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Iterable
 
-from vo.environments import EnvironmentSpec
-from vo.exceptions import ExecutionPlanError
-from vo.models import jsonable, utc_now
-from vo.task_graph import TaskGraph, TaskSpec
+from quaestio.environments import EnvironmentSpec
+from quaestio.exceptions import ExecutionPlanError
+from quaestio.models import jsonable, utc_now
+from quaestio.task_graph import TaskGraph, TaskSpec
 
 
 @dataclass(slots=True)

@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Protocol
 
-from vo.bundles import validate_bundle_dict
+from quaestio.bundles import validate_bundle_dict
 
 
 class SupportsBundle(Protocol):

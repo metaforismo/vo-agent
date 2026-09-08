@@ -2,15 +2,15 @@ from __future__ import annotations
 
 import pytest
 
-from vo import (
+from quaestio import (
     ReviewPanel,
     ReviewParseError,
     ReviewPolicy,
     ReviewResult,
     parse_review_decision,
 )
-from vo.agents import AgentRun
-from vo.models import utc_now
+from quaestio.agents import AgentRun
+from quaestio.models import utc_now
 
 
 def agent_run(stdout: str, *, reviewer: str = "critic", exit_code: int = 0) -> AgentRun:

@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "vo-agent"
-version = "0.1.0"
-description = "Evidence-gated workflows for coordinating coding agents."
+name = "limes-quaestio"
+version = "0.2.0"
+description = "Durable research graphs and evidence-gated agent workflows."
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.11"
@@ -23,12 +23,12 @@ classifiers = [
 ]
 
 [project.scripts]
-vo = "vo.cli:main"
+quaestio = "quaestio.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/metaforismo/vo-agent"
-Repository = "https://github.com/metaforismo/vo-agent"
-Issues = "https://github.com/metaforismo/vo-agent/issues"
+Homepage = "https://github.com/Limes-Labs/limes-quaestio"
+Repository = "https://github.com/Limes-Labs/limes-quaestio"
+Issues = "https://github.com/Limes-Labs/limes-quaestio/issues"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
@@ -38,4 +38,4 @@ testpaths = ["tests"]
 pythonpath = ["src"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/vo"]
+packages = ["src/quaestio"]

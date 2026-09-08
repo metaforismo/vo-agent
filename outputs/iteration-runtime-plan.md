@@ -4,7 +4,7 @@
 
 **Goal:** Add a first-class runtime primitive for forcing agents to iterate against verification until they pass or exhaust explicit limits.
 
-**Architecture:** The runtime adds a focused `vo.iterations` module with an `IterationPolicy`, serializable attempt records, and an `IterationLoop` object. `WorkflowRun.iterate_until_verified()` composes existing agent adapters, verifier chains, claims, budgets, and event recording so iteration is reproducible and inspectable in bundles and reports.
+**Architecture:** The runtime adds a focused `quaestio.iterations` module with an `IterationPolicy`, serializable attempt records, and an `IterationLoop` object. `WorkflowRun.iterate_until_verified()` composes existing agent adapters, verifier chains, claims, budgets, and event recording so iteration is reproducible and inspectable in bundles and reports.
 
 **Tech Stack:** Python 3.11+ stdlib dataclasses, existing VO agent/verifier/workflow models, pytest, current `uv` test workflow.
 
@@ -12,17 +12,17 @@
 
 ## File Structure
 
-- Create: `src/vo/iterations.py`
+- Create: `src/quaestio/iterations.py`
   - Defines `IterationPolicy`, `IterationAttempt`, and `IterationLoop`.
   - Owns validation, attempt serialization, loop status, and stop reasons.
-- Modify: `src/vo/workflow.py`
+- Modify: `src/quaestio/workflow.py`
   - Adds `iteration_loops`, `add_iteration_loop()`, and `iterate_until_verified()`.
   - Records iteration lifecycle events and exports loops in bundles.
-- Modify: `src/vo/bundles.py`
+- Modify: `src/quaestio/bundles.py`
   - Requires `iteration_loops` as a top-level bundle list.
-- Modify: `src/vo/report.py`
+- Modify: `src/quaestio/report.py`
   - Adds an iteration-loop summary line and table.
-- Modify: `src/vo/__init__.py`
+- Modify: `src/quaestio/__init__.py`
   - Exports iteration public API.
 - Modify: `README.md`
   - Documents verification-driven iteration.
@@ -78,7 +78,7 @@
 - [x] Mark loops failed when attempts are exhausted.
 - [x] Include `iteration_loops` in workflow bundles.
 - [x] Update bundle validator required keys.
-- [x] Export iteration APIs from `vo`.
+- [x] Export iteration APIs from `quaestio`.
 - [x] Render iteration loops in markdown reports.
 - [x] Add a runnable iteration-loop example.
 - [x] Update README with iteration-loop usage.
@@ -102,8 +102,8 @@ UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/optimize_with_evidence.
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/local_agent_runner.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/state_machine_workflow.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/iteration_loop.py
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo validate work/iteration-loop-bundle.json
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo inspect work/iteration-loop-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio validate work/iteration-loop-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio inspect work/iteration-loop-bundle.json
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examples
 ```
 
@@ -126,7 +126,7 @@ UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examp
 ## Expected Public API Shape
 
 ```python
-from vo import IterationLoop, IterationPolicy, WorkflowRun
+from quaestio import IterationLoop, IterationPolicy, WorkflowRun
 
 loop = IterationLoop(
     name="hard-test-loop",

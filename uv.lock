@@ -64,8 +64,8 @@ wheels = [
 ]
 
 [[package]]
-name = "vo-agent"
-version = "0.1.0"
+name = "limes-quaestio"
+version = "0.2.0"
 source = { editable = "." }
 
 [package.optional-dependencies]

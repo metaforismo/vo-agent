@@ -8,8 +8,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Protocol, Sequence
 
-from vo.models import Evidence, jsonable, utc_now
-from vo.verifiers import VerificationContext
+from quaestio.models import Evidence, jsonable, utc_now
+from quaestio.verifiers import VerificationContext
 
 
 def _coerce_output_text(value: object) -> str:

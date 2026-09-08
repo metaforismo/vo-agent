@@ -5,9 +5,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from vo.agents import AgentRun
-from vo.exceptions import TaskGraphError
-from vo.models import jsonable, utc_now
+from quaestio.agents import AgentRun
+from quaestio.exceptions import TaskGraphError
+from quaestio.models import jsonable, utc_now
 
 TASK_STATUSES = {"pending", "running", "passed", "failed", "blocked"}
 

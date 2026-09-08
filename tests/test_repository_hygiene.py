@@ -31,16 +31,16 @@ def test_pyproject_has_public_release_metadata() -> None:
 
     assert project["license"] == "Apache-2.0"
     assert project["urls"] == {
-        "Homepage": "https://github.com/metaforismo/vo-agent",
-        "Repository": "https://github.com/metaforismo/vo-agent",
-        "Issues": "https://github.com/metaforismo/vo-agent/issues",
+        "Homepage": "https://github.com/Limes-Labs/limes-quaestio",
+        "Repository": "https://github.com/Limes-Labs/limes-quaestio",
+        "Issues": "https://github.com/Limes-Labs/limes-quaestio/issues",
     }
 
 
 def test_readme_names_license_and_public_repo() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
-    assert "https://github.com/metaforismo/vo-agent" in readme
+    assert "https://github.com/Limes-Labs/limes-quaestio" in readme
     assert "Apache-2.0" in readme
     assert "No open-source license has been selected" not in readme
 

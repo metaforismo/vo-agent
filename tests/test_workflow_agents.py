@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from vo import (
+from quaestio import (
     AgentSpec,
     EnvironmentSpec,
     LocalCommandAgent,

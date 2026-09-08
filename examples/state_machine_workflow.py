@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from vo import AgentSpec, Budget, StateMachine, WorkflowRun
+from quaestio import AgentSpec, Budget, StateMachine, WorkflowRun
 
 
 def main() -> None:

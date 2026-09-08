@@ -5,8 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from vo.agents import AgentRun
-from vo.models import jsonable, utc_now
+from quaestio.agents import AgentRun
+from quaestio.models import jsonable, utc_now
 
 
 @dataclass(slots=True)

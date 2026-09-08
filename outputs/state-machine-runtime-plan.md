@@ -4,7 +4,7 @@
 
 **Goal:** Add an explicit Python state-machine layer for predictable agent workflow control flow.
 
-**Architecture:** The runtime adds a focused `vo.state_machine` module with serializable transition specs, dispatch records, guards, and handlers. `WorkflowRun` owns zero or more machines, records machine dispatches as workflow events, and exports machine state in bundles so reports and CLIs can inspect deterministic progress.
+**Architecture:** The runtime adds a focused `quaestio.state_machine` module with serializable transition specs, dispatch records, guards, and handlers. `WorkflowRun` owns zero or more machines, records machine dispatches as workflow events, and exports machine state in bundles so reports and CLIs can inspect deterministic progress.
 
 **Tech Stack:** Python 3.11+ stdlib dataclasses, existing VO workflow models, pytest, current `uv` test workflow.
 
@@ -12,18 +12,18 @@
 
 ## File Structure
 
-- Create: `src/vo/state_machine.py`
+- Create: `src/quaestio/state_machine.py`
   - Defines `MachineEvent`, `Transition`, `DispatchRecord`, `StateMachineContext`, and `StateMachine`.
   - Owns dispatch semantics, guard evaluation, handler execution, error capture, and serialization.
-- Modify: `src/vo/workflow.py`
+- Modify: `src/quaestio/workflow.py`
   - Adds `state_machines`, `add_state_machine()`, `dispatch()`, and bundle serialization.
-- Modify: `src/vo/report.py`
+- Modify: `src/quaestio/report.py`
   - Adds a state-machine section to markdown reports.
-- Modify: `src/vo/bundles.py`
+- Modify: `src/quaestio/bundles.py`
   - Requires the `state_machines` top-level bundle key and validates that it is a list.
-- Modify: `src/vo/__init__.py`
+- Modify: `src/quaestio/__init__.py`
   - Exports the state-machine public API.
-- Modify: `src/vo/exceptions.py`
+- Modify: `src/quaestio/exceptions.py`
   - Adds `StateMachineError`.
 - Modify: `README.md`
   - Documents state-machine use in the local-first runtime.
@@ -101,8 +101,8 @@ UV_PROJECT_ENVIRONMENT=work/.venv uv run --with pytest pytest -q
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/optimize_with_evidence.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/local_agent_runner.py
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python examples/state_machine_workflow.py
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo validate work/state-machine-bundle.json
-UV_PROJECT_ENVIRONMENT=work/.venv uv run vo inspect work/state-machine-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio validate work/state-machine-bundle.json
+UV_PROJECT_ENVIRONMENT=work/.venv uv run quaestio inspect work/state-machine-bundle.json
 UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examples
 ```
 
@@ -123,7 +123,7 @@ UV_PROJECT_ENVIRONMENT=work/.venv uv run python -m compileall -q src tests examp
 ## Expected Public API Shape
 
 ```python
-from vo import StateMachine, StateMachineError
+from quaestio import StateMachine, StateMachineError
 
 machine = StateMachine(name="research-loop", initial_state="drafting")
 machine.on("drafting", "candidate_ready", "verifying")

@@ -1,6 +1,6 @@
 # Architecture
 
-VO Agent is organized around durable workflow records. The current runtime is
+Limes Quaestio is organized around durable workflow records. The current runtime is
 local-first, but every major object is serializable so a distributed backend can
 consume the same contract.
 

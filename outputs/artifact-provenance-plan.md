@@ -12,9 +12,9 @@
 
 ## File Structure
 
-- `src/vo/artifacts.py`: artifact model and store.
-- `src/vo/workflow.py`: add artifact store ownership and bundle export.
-- `src/vo/__init__.py`: export `Artifact` and `ArtifactStore`.
+- `src/quaestio/artifacts.py`: artifact model and store.
+- `src/quaestio/workflow.py`: add artifact store ownership and bundle export.
+- `src/quaestio/__init__.py`: export `Artifact` and `ArtifactStore`.
 - `tests/test_artifacts.py`: artifact hashing and missing-file behavior.
 - `tests/test_workflow_artifacts.py`: workflow artifact export behavior.
 - `README.md`: document artifact registration.
@@ -38,7 +38,7 @@ from pathlib import Path
 
 import pytest
 
-from vo import ArtifactStore
+from quaestio import ArtifactStore
 
 
 def test_artifact_store_registers_file_with_hash_size_and_metadata(tmp_path: Path):
@@ -72,7 +72,7 @@ Create `tests/test_workflow_artifacts.py`:
 import json
 from pathlib import Path
 
-from vo import WorkflowRun
+from quaestio import WorkflowRun
 
 
 def test_workflow_bundle_includes_registered_artifacts(tmp_path: Path):
@@ -104,8 +104,8 @@ Expected: import failure for `ArtifactStore`.
 ### Task 2: Artifact Model and Store
 
 **Files:**
-- Create: `src/vo/artifacts.py`
-- Modify: `src/vo/__init__.py`
+- Create: `src/quaestio/artifacts.py`
+- Modify: `src/quaestio/__init__.py`
 
 - [ ] **Step 1: Implement `Artifact`**
 
@@ -117,7 +117,7 @@ Create a dataclass with `path`, `kind`, `sha256`, `size_bytes`, `metadata`, and 
 
 - [ ] **Step 3: Export artifact API**
 
-Export `Artifact` and `ArtifactStore` from `src/vo/__init__.py`.
+Export `Artifact` and `ArtifactStore` from `src/quaestio/__init__.py`.
 
 - [ ] **Step 4: Run artifact tests**
 
@@ -134,7 +134,7 @@ Expected: pass.
 ### Task 3: Workflow Integration
 
 **Files:**
-- Modify: `src/vo/workflow.py`
+- Modify: `src/quaestio/workflow.py`
 
 - [ ] **Step 1: Add artifact store to workflow**
 

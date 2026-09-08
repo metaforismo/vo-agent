@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-from vo import TaskGraph, TaskGraphError, TaskSpec
-from vo.agents import AgentRun
-from vo.models import utc_now
+from quaestio import TaskGraph, TaskGraphError, TaskSpec
+from quaestio.agents import AgentRun
+from quaestio.models import utc_now
 
 
 def agent_run(task: str, *, exit_code: int = 0) -> AgentRun:

@@ -6,8 +6,8 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from typing import Any
 
-from vo.exceptions import StateMachineError
-from vo.models import jsonable, utc_now
+from quaestio.exceptions import StateMachineError
+from quaestio.models import jsonable, utc_now
 
 
 @dataclass(slots=True)

@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from vo.models import jsonable, short_id, utc_now
+from quaestio.models import jsonable, short_id, utc_now
 
 MESSAGE_ROLES = {"user", "agent", "system"}
 

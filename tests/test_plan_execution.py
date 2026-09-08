@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from vo import AgentRun, ExecutedTask, ExecutedWave, PlanExecutionResult
-from vo.models import utc_now
+from quaestio import AgentRun, ExecutedTask, ExecutedWave, PlanExecutionResult
+from quaestio.models import utc_now
 
 
 def agent_run(*, exit_code: int = 0, task: str = "solve") -> AgentRun:

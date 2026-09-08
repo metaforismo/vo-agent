@@ -1,11 +1,11 @@
-"""Public API for VO Agent."""
+"""Public API for Limes Quaestio."""
 
-from vo.agents import AgentAdapter, AgentRun, LocalCommandAgent
-from vo.artifacts import Artifact, ArtifactStore
-from vo.budget import Budget, BudgetEntry
-from vo.bundles import load_bundle, validate_bundle_dict
-from vo.environments import ComputeResources, EnvironmentSpec
-from vo.exceptions import (
+from quaestio.agents import AgentAdapter, AgentRun, LocalCommandAgent
+from quaestio.artifacts import Artifact, ArtifactStore
+from quaestio.budget import Budget, BudgetEntry
+from quaestio.bundles import load_bundle, validate_bundle_dict
+from quaestio.environments import ComputeResources, EnvironmentSpec
+from quaestio.exceptions import (
     BudgetExceeded,
     BundleValidationError,
     ExecutionPlanError,
@@ -16,48 +16,49 @@ from vo.exceptions import (
     StateMachineError,
     TaskGraphError,
     VerificationError,
-    VoError,
+    QuaestioError,
 )
-from vo.execution_plan import (
+from quaestio.execution_plan import (
     ExecutionPlan,
     ExecutionWave,
     PlannedTask,
     build_execution_plan,
 )
-from vo.iterations import IterationAttempt, IterationLoop, IterationPolicy
-from vo.messages import Message, MessageLog
-from vo.models import AgentSpec, Claim, Evidence, VerificationResult, WorkflowEvent
-from vo.plan_execution import ExecutedTask, ExecutedWave, PlanExecutionResult
-from vo.provenance import GitInfo, RunProvenance, collect_provenance
-from vo.provisioning import (
+from quaestio.iterations import IterationAttempt, IterationLoop, IterationPolicy
+from quaestio.messages import Message, MessageLog
+from quaestio.models import AgentSpec, Claim, Evidence, VerificationResult, WorkflowEvent
+from quaestio.plan_execution import ExecutedTask, ExecutedWave, PlanExecutionResult
+from quaestio.provenance import GitInfo, RunProvenance, collect_provenance
+from quaestio.provisioning import (
     LocalProvisioner,
     ProvisionedEnvironment,
     Provisioner,
     ProvisioningResult,
 )
-from vo.report import render_markdown_report, write_markdown_report
-from vo.resources import ResourceLease, ResourceManager
-from vo.reviews import (
+from quaestio.report import render_markdown_report, write_markdown_report
+from quaestio.research import ResearchConflict, ResearchError, ResearchStore
+from quaestio.resources import ResourceLease, ResourceManager
+from quaestio.reviews import (
     ReviewPanel,
     ReviewPolicy,
     ReviewResult,
     parse_review_decision,
 )
-from vo.state_machine import (
+from quaestio.state_machine import (
     DispatchRecord,
     MachineEvent,
     StateMachine,
     StateMachineContext,
     Transition,
 )
-from vo.task_graph import TaskGraph, TaskSpec
-from vo.verifiers import (
+from quaestio.task_graph import TaskGraph, TaskSpec
+from quaestio.verifiers import (
     CallableVerifier,
     CommandVerifier,
     VerificationContext,
     VerifierChain,
 )
-from vo.workflow import WorkflowRun
+from quaestio.workflow import WorkflowRun
 
 __all__ = [
     "AgentSpec",
@@ -97,6 +98,9 @@ __all__ = [
     "Provisioner",
     "ProvisioningError",
     "ProvisioningResult",
+    "ResearchConflict",
+    "ResearchError",
+    "ResearchStore",
     "ResourceConflict",
     "ResourceLease",
     "ResourceManager",
@@ -116,7 +120,7 @@ __all__ = [
     "VerificationError",
     "VerificationResult",
     "VerifierChain",
-    "VoError",
+    "QuaestioError",
     "WorkflowEvent",
     "WorkflowRun",
     "collect_provenance",

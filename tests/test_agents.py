@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from vo import LocalCommandAgent, VerificationContext
+from quaestio import LocalCommandAgent, VerificationContext
 
 
 def test_local_command_agent_passes_task_on_stdin_and_captures_output(tmp_path: Path):
@@ -55,7 +55,7 @@ def test_local_command_agent_records_timeout_as_failed_run(tmp_path: Path):
 
 def test_local_command_agent_records_missing_command_as_failed_run(tmp_path: Path):
     agent = LocalCommandAgent(
-        ["missing-vo-agent-command"],
+        ["missing-limes-quaestio-command"],
         name="missing-agent",
         metadata={"role": "worker"},
     )
@@ -65,6 +65,6 @@ def test_local_command_agent_records_missing_command_as_failed_run(tmp_path: Pat
     assert result.passed is False
     assert result.exit_code == 127
     assert result.stdout == ""
-    assert "missing-vo-agent-command" in result.stderr
+    assert "missing-limes-quaestio-command" in result.stderr
     assert result.metadata["role"] == "worker"
     assert result.metadata["error_type"] == "FileNotFoundError"
